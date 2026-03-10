@@ -10,7 +10,7 @@
       "peak_bankroll": 1747.25,
       "final_bankroll": null,
       "net_pnl": null,
-      "total_bets": 6,
+      "total_bets": 9,
       "wins": 5,
       "losses": 1
     }
@@ -135,6 +135,66 @@
         }
       ],
       "summary": "Day 2 settle — CLE ✅ covered -12.5 (115-101, margin +14), DEN ✅ covered +7.5 (OKC 129-126, lost by only 3), MEM ❌ ML LOST (BKN 126-115, Nets bench explosion). Day 2 net P&L: +€308.25. Total P&L: +€747.25. Bankroll: €649 → €1,747.25."
+    },
+    {
+      "entry_id": "nba_entry_20260310",
+      "session": 1,
+      "timestamp": "2026-03-10T22:30:00",
+      "type": "bets_placed",
+      "bankroll_before": 1747.25,
+      "total_staked": 665.00,
+      "bankroll_after": 1082.25,
+      "bets": [
+        {
+          "id": "nba_bet_20260310_001",
+          "match": "San Antonio Spurs vs Boston Celtics",
+          "time": "00:00",
+          "pick": "San Antonio Spurs -3.5",
+          "odds": 1.80,
+          "stake": 315.00,
+          "potential_return": 567.00,
+          "reasoning": "Spurs are 47-17, best record in the NBA — won 15 of last 16, 12-4 ATS in last 16 games. Celtics missing Vucevic (OUT, finger surgery) and Tatum limited to ~27-min restriction (only 3rd game back from Achilles tear). Victor Wembanyama dominant at home — Spurs just demolished Houston 145-120. Depleted Celtics frontcourt vs Wembanyama spells trouble covering the spread. Spurs home court (Frost Bank Center) — commanding 33-6 home record this season.",
+          "confidence": 68,
+          "anchor_players": ["Victor Wembanyama"],
+          "result": null,
+          "returned": null,
+          "pnl": null,
+          "settled_at": null
+        },
+        {
+          "id": "nba_bet_20260310_002",
+          "match": "Los Angeles Lakers vs Minnesota Timberwolves",
+          "time": "03:00",
+          "pick": "Los Angeles Lakers ML",
+          "odds": 2.05,
+          "stake": 175.00,
+          "potential_return": 358.75,
+          "reasoning": "LeBron James confirmed OUT for 3rd straight game (left foot arthritis + hip contusion). Luka Doncic (32.5 ppg, #1 scorer in NBA) at home on NBC primetime — capable of carrying the Lakers on a big-stage night. Lakers home court at Crypto.com Arena — crowd factor in a marquee TV game. Market prices Lakers at ~49% implied probability (2.05); marginal value given Luka's ceiling at home.",
+          "confidence": 47,
+          "anchor_players": ["Luka Doncic"],
+          "result": null,
+          "returned": null,
+          "pnl": null,
+          "settled_at": null
+        },
+        {
+          "id": "nba_bet_20260310_003",
+          "match": "Chicago Bulls vs Golden State Warriors",
+          "time": "03:00",
+          "pick": "Chicago Bulls +6.5",
+          "odds": 1.91,
+          "stake": 175.00,
+          "potential_return": 334.25,
+          "reasoning": "Warriors are on the second leg of a back-to-back (played Jazz in Utah on Monday, 32+ min from key players). Draymond Green listed as QUESTIONABLE (injury management, lower back). Bulls arrive rested and already acclimated to the West Coast. Line has barely moved suggesting market is not fully pricing in Warriors fatigue. Getting +6.5 on a rested team against a fatigued, depleted opponent is sharp value.",
+          "confidence": 55,
+          "anchor_players": [],
+          "result": null,
+          "returned": null,
+          "pnl": null,
+          "settled_at": null
+        }
+      ],
+      "summary": "Day 3 commit — 3 picks totalling €665 (38% of bankroll). 2 from 14:00 draft (Spurs -3.5, Lakers ML) + 1 new late pick (Bulls +6.5 off Warriors back-to-back). No cancellations. Bankroll: €1,747.25 → €1,082.25. Potential return if all win: +€1,260.00."
     }
   ]
 }
