@@ -46,13 +46,22 @@ body { font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'DM Sans', 'He
 .ticker-bar { background: #1a1410; height: 32px; display: flex; align-items: center; overflow: hidden; }
 .ticker-label { background: var(--burg); padding: 0 16px; height: 100%; display: flex; align-items: center;
   font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; flex-shrink: 0; }
-.ticker-scroll { display: flex; animation: ticker 13s linear infinite; white-space: nowrap; }
-@media (max-width: 768px) { .ticker-scroll { animation-duration: 1s; } }
+.ticker-scroll { display: flex; white-space: nowrap; will-change: transform;
+  -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  animation: ticker 13s linear infinite;
+  -webkit-animation: ticker 13s linear infinite; }
+@media (max-width: 768px) {
+  .ticker-scroll { animation-duration: 4s; -webkit-animation-duration: 4s; } }
 .ticker-item { padding: 0 26px; font-size: 0.68rem; color: #7a6d5e; border-right: 1px solid #2a2218; }
 .ticker-item .win  { color: var(--green-neon); }
 .ticker-item .loss { color: #ff7070; }
 .ticker-item .pend { color: #f5c542; }
-@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+@keyframes ticker {
+  0%   { transform: translate3d(0,0,0); }
+  100% { transform: translate3d(-50%,0,0); } }
+@-webkit-keyframes ticker {
+  0%   { -webkit-transform: translate3d(0,0,0); }
+  100% { -webkit-transform: translate3d(-50%,0,0); } }
 
 /* ── HEADER ── */
 header { background: var(--card); border-bottom: 1px solid var(--border); box-shadow: 0 1px 0 rgba(255,255,255,0.8); }
