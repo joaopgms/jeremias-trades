@@ -47,6 +47,7 @@ body { font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'DM Sans', 'He
 .ticker-label { background: var(--burg); padding: 0 16px; height: 100%; display: flex; align-items: center;
   font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; flex-shrink: 0; }
 .ticker-scroll { display: flex; animation: ticker 40s linear infinite; white-space: nowrap; }
+@media (max-width: 768px) { .ticker-scroll { animation-duration: 18s; } }
 .ticker-item { padding: 0 26px; font-size: 0.68rem; color: #7a6d5e; border-right: 1px solid #2a2218; }
 .ticker-item .win  { color: var(--green-neon); }
 .ticker-item .loss { color: #ff7070; }
@@ -279,6 +280,7 @@ td { padding: 13px 14px; font-size: 0.83rem; vertical-align: middle; }
 .copy-toast.show { opacity: 1; }
 
 @media (max-width: 900px) { .analytics-section { grid-template-columns: 1fr; } }
+<<<<<<< HEAD
 
 /* ── MOBILE BET CARDS ── */
 .bet-cards-mobile { display: none; padding: 12px; }
@@ -307,14 +309,19 @@ td { padding: 13px 14px; font-size: 0.83rem; vertical-align: middle; }
 .bet-card-reasoning { font-size: 0.7rem; color: var(--muted); margin-top: 6px;
   padding-top: 8px; border-top: 1px solid var(--border2); line-height: 1.5; }
 
+=======
+>>>>>>> 559c20d84a257af197b81c60c3fddda145686e3a
 @media (max-width: 768px) {
   .header-top,.nav-tabs,.scoreboard,.chart-section,.analytics-section,.filters-bar,.table-section,.draft-section {
     margin-left: 12px; margin-right: 12px; }
   .reasoning-cell { display: none; }
   .analytics-section { grid-template-columns: 1fr; }
+<<<<<<< HEAD
   /* Switch table → cards */
   table, thead { display: none !important; }
   .bet-cards-mobile { display: block; }
+=======
+>>>>>>> 559c20d84a257af197b81c60c3fddda145686e3a
 }
 </style>
 </head>
@@ -479,7 +486,10 @@ td { padding: 13px 14px; font-size: 0.83rem; vertical-align: middle; }
     </thead>
     <tbody id="betTableBody"></tbody>
   </table>
+<<<<<<< HEAD
   <div class="bet-cards-mobile" id="betCardsMobile"></div>
+=======
+>>>>>>> 559c20d84a257af197b81c60c3fddda145686e3a
   <div class="empty-state" id="emptyState" style="display:none">
     <span style="font-size:2.5rem;display:block;margin-bottom:10px">🏀</span>
     No bets match your filters.
@@ -597,7 +607,7 @@ function computeStats() {
   const lost = settled.filter(b => b.result==='LOST');
   const pending = sb.filter(b => !b.result);
   const si = activeSession==='all' ? {} : (sessions.find(s=>s.session===activeSession)||{});
-  const totalStaked   = sb.reduce((s,b)=>s+b.stake,0);
+  const totalStaked   = settled.reduce((s,b)=>s+b.stake,0);
   const totalReturned = won.reduce((s,b)=>s+(b.returned||0),0);
   const netPnl = totalReturned - totalStaked;
   const sessionStart = HISTORY_DATA.initial_bankroll;
@@ -993,6 +1003,7 @@ function renderTable() {
       <td class="reasoning-cell">${b.reasoning||''}</td>
     </tr>`;
   }).join('');
+<<<<<<< HEAD
 
   // ── MOBILE CARDS ──
   const mobileLogoHtml = (name) => {
@@ -1044,6 +1055,8 @@ function renderTable() {
       ${reasonHtml}
     </div>`;
   }).join('');
+=======
+>>>>>>> 559c20d84a257af197b81c60c3fddda145686e3a
 }
 
 function resetFilters() {
