@@ -47,7 +47,7 @@ body { font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'DM Sans', 'He
 .ticker-label { background: var(--burg); padding: 0 16px; height: 100%; display: flex; align-items: center;
   font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; flex-shrink: 0; }
 .ticker-scroll { display: flex; animation: ticker 40s linear infinite; white-space: nowrap; }
-@media (max-width: 768px) { .ticker-scroll { animation-duration: 18s; } }
+@media (max-width: 768px) { .ticker-scroll { animation-duration: 10s; } }
 .ticker-item { padding: 0 26px; font-size: 0.68rem; color: #7a6d5e; border-right: 1px solid #2a2218; }
 .ticker-item .win  { color: var(--green-neon); }
 .ticker-item .loss { color: #ff7070; }
@@ -601,10 +601,11 @@ function computeStats() {
   const totalStaked   = settled.reduce((s,b)=>s+b.stake,0);
   const totalReturned = won.reduce((s,b)=>s+(b.returned||0),0);
   const netPnl = totalReturned - totalStaked;
+  const pendingStaked = pending.reduce((s,b)=>s+b.stake,0);
   const sessionStart = HISTORY_DATA.initial_bankroll;
   const bankroll = activeSession==='all'
-    ? sessions.length*sessionStart - totalStaked + totalReturned
-    : sessionStart - totalStaked + totalReturned;
+    ? sessions.length*sessionStart - totalStaked + totalReturned - pendingStaked
+    : sessionStart - totalStaked + totalReturned - pendingStaked;
   const peak    = si.peak_bankroll || sessionStart;
   const winRate = settled.length ? Math.round(won.length/settled.length*100) : null;
   const roi     = totalStaked ? ((netPnl/totalStaked)*100).toFixed(1) : null;
