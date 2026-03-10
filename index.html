@@ -46,8 +46,8 @@ body { font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'DM Sans', 'He
 .ticker-bar { background: #1a1410; height: 32px; display: flex; align-items: center; overflow: hidden; }
 .ticker-label { background: var(--burg); padding: 0 16px; height: 100%; display: flex; align-items: center;
   font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; flex-shrink: 0; }
-.ticker-scroll { display: flex; animation: ticker 40s linear infinite; white-space: nowrap; }
-@media (max-width: 768px) { .ticker-scroll { animation-duration: 10s; } }
+.ticker-scroll { display: flex; animation: ticker 13s linear infinite; white-space: nowrap; }
+@media (max-width: 768px) { .ticker-scroll { animation-duration: 3s; } }
 .ticker-item { padding: 0 26px; font-size: 0.68rem; color: #7a6d5e; border-right: 1px solid #2a2218; }
 .ticker-item .win  { color: var(--green-neon); }
 .ticker-item .loss { color: #ff7070; }
@@ -488,102 +488,8 @@ td { padding: 13px 14px; font-size: 0.83rem; vertical-align: middle; }
 </div>
 <div id="copyToast" class="copy-toast"></div>
 
+<script src="data.js"></script>
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
-const HISTORY_DATA = {
-  "simulation_start": "2026-03-08",
-  "initial_bankroll": 1000.00,
-  "sport": "NBA",
-  "games": [
-    { "session": 1, "start_date": "2026-03-08", "end_date": null,
-      "peak_bankroll": 1747.25, "final_bankroll": null, "net_pnl": null,
-      "total_bets": 6, "wins": 5, "losses": 1 }
-  ],
-  "entries": [
-    {
-      "entry_id": "nba_entry_20260308", "session": 1,
-      "timestamp": "2026-03-08T19:00:00", "type": "bets_placed",
-      "bankroll_before": 1000.00, "total_staked": 400.00, "bankroll_after": 1439.00,
-      "bets": [
-        { "id":"nba_bet_20260308_001","match":"Miami Heat vs Detroit Pistons","time":"22:00",
-          "pick":"Miami Heat ML","odds":1.98,"stake":150,"potential_return":297,
-          "reasoning":"Heat near even money at 1.98 vs Pistons — historically resilient franchise under Spoelstra; competitive matchup for both teams fighting for playoff position",
-          "confidence":65,"anchor_players":[],"result":"WON","returned":297,"pnl":147,"settled_at":"2026-03-09T14:00:00"},
-        { "id":"nba_bet_20260308_002","match":"Sacramento Kings vs Chicago Bulls","time":"01:00",
-          "pick":"Sacramento Kings ML","odds":2.00,"stake":150,"potential_return":300,
-          "reasoning":"Kings at even money (2.00) offers excellent value; De'Aaron Fox and Domantas Sabonis-led offense capable of winning at home; road Bulls at 1.70 seems overpriced",
-          "confidence":70,"anchor_players":["De'Aaron Fox","Domantas Sabonis"],"result":"WON","returned":300,"pnl":150,"settled_at":"2026-03-09T14:00:00"},
-        { "id":"nba_bet_20260308_003","match":"Phoenix Suns vs Charlotte Hornets","time":"02:00",
-          "pick":"Phoenix Suns ML","odds":2.42,"stake":100,"potential_return":242,
-          "reasoning":"Suns at 2.42 looks undervalued for a talent-rich roster; speculative play on market overreaction to recent Suns struggles; home court advantage",
-          "confidence":52,"anchor_players":[],"result":"WON","returned":242,"pnl":142,"settled_at":"2026-03-09T14:00:00"}
-      ],
-      "summary": "Opening bets — 3 picks totalling €400. ALL 3 WON! Net P&L: +€439. Bankroll: €1000 → €1439."
-    },
-    {
-      "entry_id": "nba_entry_20260309", "session": 1,
-      "timestamp": "2026-03-09T22:30:00", "type": "bets_placed",
-      "bankroll_before": 1439.00, "total_staked": 790.00, "bankroll_after": 1747.25,
-      "bets": [
-        { "id":"nba_bet_20260309_001","match":"Cleveland Cavaliers vs Philadelphia 76ers","time":"00:00",
-          "pick":"Cleveland Cavaliers -12.5","odds":1.91,"stake":360,"potential_return":687.60,
-          "reasoning":"76ers are catastrophically undermanned: Embiid OUT (oblique), Paul George OUT (suspension), Maxey OUT (finger) — top 3 all absent. Cavaliers near full strength with Mitchell back. Home court advantage.",
-          "confidence":80,"anchor_players":["Donovan Mitchell"],"result":"WON","returned":687.60,"pnl":327.60,"settled_at":"2026-03-10T14:00:00"},
-        { "id":"nba_bet_20260309_002","match":"Oklahoma City Thunder vs Denver Nuggets","time":"00:30",
-          "pick":"Denver Nuggets +7.5","odds":1.91,"stake":215,"potential_return":410.65,
-          "reasoning":"OKC severely depleted: Jalen Williams OUT, Hartenstein OUT. Jokic confirmed playing. Getting +7.5 against a 4-man-down OKC team is excellent spread value.",
-          "confidence":65,"anchor_players":["Nikola Jokic","Jamal Murray"],"result":"WON","returned":410.65,"pnl":195.65,"settled_at":"2026-03-10T14:00:00"},
-        { "id":"nba_bet_20260309_003","match":"Brooklyn Nets vs Memphis Grizzlies","time":"23:30",
-          "pick":"Memphis Grizzlies ML","odds":1.75,"stake":215,"potential_return":376.25,
-          "reasoning":"Michael Porter Jr. OUT for the Nets. Grizzlies are the more complete team — better depth, coaching, defensive intensity. Nets near bottom of East.",
-          "confidence":64,"anchor_players":[],"result":"LOST","returned":0,"pnl":-215.00,"settled_at":"2026-03-10T14:00:00"}
-      ],
-      "summary": "Day 2 settle — CLE ✅ -12.5 (115-101, margin 14pts), DEN ✅ +7.5 (OKC 129-126, lost by 3), MEM ❌ ML LOST (BKN 126-115). Day 2 P&L: +€308.25. Total P&L: +€747.25. Bankroll: €649 → €1,747.25."
-    }
-  ]
-};
-
-const DRAFT_PICKS = [
-  {
-    "id": "nba_draft_20260310_001",
-    "match": "San Antonio Spurs vs Boston Celtics",
-    "time": "00:00",
-    "pick": "San Antonio Spurs -3.5",
-    "odds": 1.80,
-    "stake": 315.00,
-    "potential_return": 567.00,
-    "confidence": 68,
-    "reasoning": [
-      "Spurs 47-17 (best NBA record), won 15 of last 16, 12-4 ATS last 16 games",
-      "Celtics missing Vucevic (OUT, finger) and Tatum on 27-min restriction (2nd game of Achilles comeback)",
-      "Wembanyama dominates a depleted Celtics frontcourt at home",
-      "Spurs demolished Houston 145-120 on Sunday — elite momentum",
-      "Spurs 33-6 at home this season — Frost Bank Center fortress"
-    ],
-    "anchor_players": ["Victor Wembanyama"],
-    "drafted_at": "2026-03-10T14:00:00"
-  },
-  {
-    "id": "nba_draft_20260310_002",
-    "match": "Los Angeles Lakers vs Minnesota Timberwolves",
-    "time": "03:00",
-    "pick": "Los Angeles Lakers ML",
-    "odds": 2.05,
-    "stake": 175.00,
-    "potential_return": 358.75,
-    "confidence": 47,
-    "reasoning": [
-      "LeBron James confirmed OUT for 3rd straight game (foot arthritis + hip) — market moved Wolves to -2.5 favourites on Betano",
-      "Luka Doncic (32.5 ppg, #1 scorer in NBA) at home on NBC primetime — capable of carrying the Lakers on a big-stage night",
-      "Lakers home court at Crypto.com Arena — crowd factor in a marquee TV game",
-      "Market prices Lakers at ~49% implied probability (2.05); marginal value given Luka's ceiling at home",
-      "SPECULATIVE — cancel at 22:30 if LeBron is surprisingly active"
-    ],
-    "anchor_players": ["Luka Doncic"],
-    "drafted_at": "2026-03-10T14:00:00"
-  }
-];
-
 // ── FLATTEN ───────────────────────────────────────────────────────────────────
 let allBets = [];
 HISTORY_DATA.entries.forEach(e => {

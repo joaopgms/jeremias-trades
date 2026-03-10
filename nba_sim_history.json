@@ -1,0 +1,140 @@
+{
+  "simulation_start": "2026-03-08",
+  "initial_bankroll": 1000.00,
+  "sport": "NBA",
+  "games": [
+    {
+      "session": 1,
+      "start_date": "2026-03-08",
+      "end_date": null,
+      "peak_bankroll": 1747.25,
+      "final_bankroll": null,
+      "net_pnl": null,
+      "total_bets": 6,
+      "wins": 5,
+      "losses": 1
+    }
+  ],
+  "entries": [
+    {
+      "entry_id": "nba_entry_20260308",
+      "session": 1,
+      "timestamp": "2026-03-08T19:00:00",
+      "type": "bets_placed",
+      "bankroll_before": 1000.00,
+      "total_staked": 400.00,
+      "bankroll_after": 1439.00,
+      "bets": [
+        {
+          "id": "nba_bet_20260308_001",
+          "match": "Miami Heat vs Detroit Pistons",
+          "time": "22:00",
+          "pick": "Miami Heat ML",
+          "odds": 1.98,
+          "stake": 150.00,
+          "potential_return": 297.00,
+          "reasoning": "Heat near even money at 1.98 vs Pistons — historically resilient franchise under Spoelstra; competitive matchup for both teams fighting for playoff position",
+          "confidence": 65,
+          "anchor_players": [],
+          "result": "WON",
+          "returned": 297.00,
+          "pnl": 147.00,
+          "settled_at": "2026-03-09T14:00:00"
+        },
+        {
+          "id": "nba_bet_20260308_002",
+          "match": "Sacramento Kings vs Chicago Bulls",
+          "time": "01:00",
+          "pick": "Sacramento Kings ML",
+          "odds": 2.00,
+          "stake": 150.00,
+          "potential_return": 300.00,
+          "reasoning": "Kings at even money (2.00) offers excellent value; De'Aaron Fox and Domantas Sabonis-led offense capable of winning at home; road Bulls at 1.70 seems overpriced",
+          "confidence": 70,
+          "anchor_players": ["De'Aaron Fox", "Domantas Sabonis"],
+          "result": "WON",
+          "returned": 300.00,
+          "pnl": 150.00,
+          "settled_at": "2026-03-09T14:00:00"
+        },
+        {
+          "id": "nba_bet_20260308_003",
+          "match": "Phoenix Suns vs Charlotte Hornets",
+          "time": "02:00",
+          "pick": "Phoenix Suns ML",
+          "odds": 2.42,
+          "stake": 100.00,
+          "potential_return": 242.00,
+          "reasoning": "Suns at 2.42 looks undervalued for a talent-rich roster; speculative play on market overreaction to recent Suns struggles; home court advantage",
+          "confidence": 52,
+          "anchor_players": [],
+          "result": "WON",
+          "returned": 242.00,
+          "pnl": 142.00,
+          "settled_at": "2026-03-09T14:00:00"
+        }
+      ],
+      "summary": "Opening bets — 3 picks totalling €400. ALL 3 WON! Heat 121-110 Pistons, Kings 126-110 Bulls, Suns 111-99 Hornets. Net P&L: +€439. Bankroll: €1000 → €1439."
+    },
+    {
+      "entry_id": "nba_entry_20260309",
+      "session": 1,
+      "timestamp": "2026-03-09T22:30:00",
+      "type": "bets_placed",
+      "bankroll_before": 1439.00,
+      "total_staked": 790.00,
+      "bankroll_after": 1747.25,
+      "bets": [
+        {
+          "id": "nba_bet_20260309_001",
+          "match": "Cleveland Cavaliers vs Philadelphia 76ers",
+          "time": "00:00",
+          "pick": "Cleveland Cavaliers -12.5",
+          "odds": 1.91,
+          "stake": 360.00,
+          "potential_return": 687.60,
+          "reasoning": "76ers are catastrophically undermanned: Embiid OUT (oblique), Paul George OUT (suspension), Maxey OUT (finger) — their top 3 players all absent. Cavaliers have Mitchell back from injury and are at near full strength. Home court advantage. Spread opened at -10.5, moved to -12.5 on injury news. At 1.91 for -12.5, market still offers good value for a decimated opponent.",
+          "confidence": 80,
+          "anchor_players": ["Donovan Mitchell"],
+          "result": "WON",
+          "returned": 687.60,
+          "pnl": 327.60,
+          "settled_at": "2026-03-10T14:00:00"
+        },
+        {
+          "id": "nba_bet_20260309_002",
+          "match": "Oklahoma City Thunder vs Denver Nuggets",
+          "time": "00:30",
+          "pick": "Denver Nuggets +7.5",
+          "odds": 1.91,
+          "stake": 215.00,
+          "potential_return": 410.65,
+          "reasoning": "OKC is severely depleted: Jalen Williams OUT (hamstring), Isaiah Hartenstein OUT (calf), Alex Caruso QUESTIONABLE (hip), Chet Holmgren QUESTIONABLE (illness). Jokic confirmed playing despite minute restriction. Getting +7.5 against a potentially 4-man-down OKC with Jokic available is excellent spread value. Jamal Murray confirmed available at tip-off.",
+          "confidence": 65,
+          "anchor_players": ["Nikola Jokic", "Jamal Murray"],
+          "result": "WON",
+          "returned": 410.65,
+          "pnl": 195.65,
+          "settled_at": "2026-03-10T14:00:00"
+        },
+        {
+          "id": "nba_bet_20260309_003",
+          "match": "Brooklyn Nets vs Memphis Grizzlies",
+          "time": "23:30",
+          "pick": "Memphis Grizzlies ML",
+          "odds": 1.75,
+          "stake": 215.00,
+          "potential_return": 376.25,
+          "reasoning": "Michael Porter Jr. confirmed OUT for the Nets (their leading scorer). Grizzlies are the more complete team even without Ja Morant — better depth, better coaching, better defensive intensity. Nets sitting near bottom of East with no playoff ambition — potential tanking risk. Value at 1.75 for the superior roster.",
+          "confidence": 64,
+          "anchor_players": [],
+          "result": "LOST",
+          "returned": 0,
+          "pnl": -215.00,
+          "settled_at": "2026-03-10T14:00:00"
+        }
+      ],
+      "summary": "Day 2 settle — CLE ✅ covered -12.5 (115-101, margin +14), DEN ✅ covered +7.5 (OKC 129-126, lost by only 3), MEM ❌ ML LOST (BKN 126-115, Nets bench explosion). Day 2 net P&L: +€308.25. Total P&L: +€747.25. Bankroll: €649 → €1,747.25."
+    }
+  ]
+}
