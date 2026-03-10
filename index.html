@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🏀 Jeremias Trades — NBA Bet Tracker</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,800,900&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.44.0/apexcharts.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #f0e9dc;
+  --card:      #ffffff;
+  --surface:   #faf6f0;
+  --border:    #e2d9cc;
+  --border2:   #ede5da;
+  --text:      #1a1410;
+  --muted:     #7a6e65;
+  --burg:      #7c1d34;
+  --burg-soft: #fdf0f2;
+  --burg-mid:  #f5d5da;
+  --teal:      #0d6b6e;
+  --teal-soft: #e6f5f5;
+  --teal-mid:  #b3e0e1;
+  --green:     #2a6b4a;
+  --green-soft:#e8f5ee;
+  --green-neon:#00c896;
+  --yellow:    #b08800;
+  --yellow-soft:#fef9e0;
+  --yellow-mid:#fde68a;
+  --cyan:      #008fa8;
+  --cyan-soft: #e0f5f8;
+  --r:         16px;
+  --r-sm:      10px;
+  --r-pill:    999px;
+  --shadow:    0 2px 8px rgba(28,20,14,0.06), 0 0 0 1px rgba(28,20,14,0.04);
+  --shadow-md: 0 4px 20px rgba(28,20,14,0.10), 0 0 0 1px rgba(28,20,14,0.04);
+}
+
+body { font-family: 'Satoshi', -apple-system, BlinkMacSystemFont, 'DM Sans', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; }
+
+/* ── TICKER ── */
+.ticker-bar { background: #1a1410; height: 32px; display: flex; align-items: center; overflow: hidden; }
+.ticker-label { background: var(--burg); padding: 0 16px; height: 100%; display: flex; align-items: center;
+  font-size: 0.62rem; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; flex-shrink: 0; }
+.ticker-scroll { display: flex; animation: ticker 40s linear infinite; white-space: nowrap; }
+.ticker-item { padding: 0 26px; font-size: 0.68rem; color: #7a6d5e; border-right: 1px solid #2a2218; }
+.ticker-item .win  { color: var(--green-neon); }
+.ticker-item .loss { color: #ff7070; }
+.ticker-item .pend { color: #f5c542; }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* ── HEADER ── */
+header { background: var(--card); border-bottom: 1px solid var(--border); box-shadow: 0 1px 0 rgba(255,255,255,0.8); }
+.header-top { padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-icon { width: 46px; height: 46px; background: linear-gradient(135deg, var(--burg) 0%, #a8294a 100%);
+  border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-size: 1.35rem;
+  box-shadow: 0 4px 14px rgba(124,29,52,0.35); }
+.brand-name { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; color: var(--text); line-height: 1; }
+.brand-sub { font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 3px; }
+.header-meta { font-size: 0.7rem; color: var(--muted); text-align: right; line-height: 1.6; }
+.header-meta strong { color: var(--text); }
+.live-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 0.6rem; font-weight: 700;
+  color: var(--green-neon); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-neon);
+  animation: blink 1.6s ease-in-out infinite; box-shadow: 0 0 6px var(--green-neon); }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+/* ── TABS ── */
+.nav-tabs { display: flex; padding: 0 32px; border-top: 1px solid var(--border2); background: var(--surface); gap: 2px; }
+.nav-tab { padding: 10px 16px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--muted); cursor: pointer; border: none; background: transparent;
+  border-bottom: 2.5px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--burg); border-bottom-color: var(--burg); }
+.nav-tab .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-left: 5px; vertical-align: middle; }
+.nav-tab .dot.on  { background: var(--green-neon); box-shadow: 0 0 5px var(--green-neon); }
+.nav-tab .dot.off { background: var(--muted); }
+
+/* ── BUST BANNER ── */
+.bust-banner { margin: 20px 32px 0; background: var(--burg-soft); border: 1px solid var(--burg-mid);
+  border-radius: var(--r-sm); padding: 12px 18px; display: flex; align-items: center; gap: 10px;
+  color: var(--burg); font-size: 0.84rem; font-weight: 500; }
+
+/* ── SCOREBOARD ── */
+.scoreboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin: 20px 32px 0; }
+.score-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 18px 22px; box-shadow: var(--shadow); position: relative; overflow: hidden; transition: box-shadow 0.2s; }
+.score-card:hover { box-shadow: var(--shadow-md); }
+.score-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; border-radius: var(--r) var(--r) 0 0; }
+.sc-burg::before  { background: linear-gradient(90deg, var(--burg), #c44060); }
+.sc-teal::before  { background: linear-gradient(90deg, var(--teal), #10a0a4); }
+.sc-green::before { background: linear-gradient(90deg, var(--green), #3d9e6e); }
+.sc-yellow::before{ background: linear-gradient(90deg, var(--yellow), #d4aa00); }
+.sc-cyan::before  { background: linear-gradient(90deg, var(--cyan), #00b8d4); }
+.score-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 8px; }
+.score-value { font-size: 1.9rem; font-weight: 900; line-height: 1; letter-spacing: -1px; color: var(--text); }
+.sc-burg  .score-value { color: var(--burg); }
+.sc-teal  .score-value { color: var(--teal); }
+.sc-green .score-value { color: var(--green); }
+.sc-yellow.score-value { color: var(--yellow); }
+.sc-cyan  .score-value { color: var(--cyan); }
+.score-sub { font-size: 0.68rem; color: var(--muted); margin-top: 5px; }
+
+/* ── CHART ── */
+.chart-section { margin: 16px 32px 0; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); box-shadow: var(--shadow); }
+.section-header { padding: 14px 22px; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between; }
+.section-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+.section-title span { color: var(--burg); }
+.chart-wrap { padding: 16px 12px 8px; height: 220px; }
+
+/* ── ANALYTICS ── */
+.analytics-section { margin: 16px 32px 0; display: grid; grid-template-columns: 260px 1fr; gap: 12px; }
+.analytics-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow); }
+.donut-wrap { padding: 18px 22px 22px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.donut-canvas-wrap { position: relative; width: 160px; height: 160px; }
+.donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+.donut-pct { font-size: 1.7rem; font-weight: 900; color: var(--text); line-height: 1; letter-spacing: -1px; }
+.donut-lbl { font-size: 0.58rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+.donut-legend { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.7rem; font-weight: 600; color: var(--text); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.stats-grid { padding: 16px 22px 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; }
+.a-stat { border-bottom: 1px solid var(--border2); padding-bottom: 10px; }
+.a-stat:nth-last-child(-n+2) { border-bottom: none; padding-bottom: 0; }
+.a-stat-label { font-size: 0.58rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
+.a-stat-value { font-size: 1.05rem; font-weight: 800; color: var(--text); line-height: 1.1; }
+.a-stat-value.green  { color: var(--green); }
+.a-stat-value.burg   { color: var(--burg); }
+.a-stat-value.teal   { color: var(--teal); }
+.a-stat-sub { font-size: 0.66rem; color: var(--muted); margin-top: 3px; }
+.streak-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px;
+  font-size: 0.68rem; font-weight: 700; border-radius: var(--r-pill); }
+.streak-w { background: var(--green-soft); color: var(--green); border: 1px solid #b3e0cc; }
+.streak-l { background: var(--burg-soft); color: var(--burg); border: 1px solid var(--burg-mid); }
+.streak-n { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+.calib-bar-bg { height: 5px; background: var(--border2); border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.calib-bar    { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+/* ── DRAFT PICKS ── */
+.draft-section { margin: 16px 32px 0; background: var(--card); border: 1px solid var(--yellow-mid);
+  border-top: 3px solid var(--yellow); border-radius: var(--r); box-shadow: var(--shadow); }
+.draft-header { padding: 13px 22px; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between; background: var(--yellow-soft);
+  border-radius: var(--r) var(--r) 0 0; }
+.draft-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--yellow); }
+.draft-subtitle { font-size: 0.68rem; color: var(--muted); }
+.draft-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); }
+.draft-card { padding: 16px 20px; border-right: 1px solid var(--border2); }
+.draft-card:last-child { border-right: none; }
+.draft-matchup { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 6px; }
+.draft-pick { font-size: 0.85rem; font-weight: 800; color: var(--text); margin: 4px 0; }
+.draft-meta { font-size: 0.7rem; color: var(--muted); display: flex; gap: 10px; flex-wrap: wrap; }
+.draft-reasoning { font-size: 0.72rem; color: var(--muted); line-height: 1.45; margin-top: 8px;
+  border-top: 1px solid var(--border2); padding-top: 8px; }
+.draft-anchors { margin-top: 5px; font-size: 0.66rem; color: var(--yellow); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.anchor-tag { background: var(--yellow-soft); border: 1px solid var(--yellow-mid);
+  padding: 1px 6px; font-size: 0.62rem; font-weight: 700; color: var(--yellow); border-radius: var(--r-pill); }
+.status-draft { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-mid);
+  padding: 3px 10px; font-size: 0.62rem; font-weight: 700; border-radius: var(--r-pill); text-transform: uppercase; }
+
+/* ── FILTERS ── */
+.filters-bar { margin: 16px 32px 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filter-label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+.filters-bar select, .filters-bar input {
+  background: var(--card); border: 1px solid var(--border); color: var(--text);
+  padding: 7px 12px; font-size: 0.8rem; border-radius: var(--r-sm); outline: none; cursor: pointer;
+  transition: border-color 0.15s; }
+.filters-bar select:focus, .filters-bar input:focus { border-color: var(--burg); box-shadow: 0 0 0 3px rgba(124,29,52,0.1); }
+.btn-reset { background: transparent; border: 1px solid var(--border); color: var(--muted);
+  padding: 7px 14px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  cursor: pointer; transition: all 0.15s; border-radius: var(--r-sm); }
+.btn-reset:hover { border-color: var(--burg); color: var(--burg); }
+.filter-count { font-size: 0.7rem; color: var(--muted); }
+
+/* ── TABLE ── */
+.table-section { margin: 12px 32px 56px; background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); box-shadow: var(--shadow); overflow: hidden; }
+.table-head-bar { padding: 14px 22px; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between; background: var(--surface); }
+.table-head-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+.table-head-title span { color: var(--burg); }
+
+/* Action buttons row */
+.table-head-actions { display: flex; align-items: center; gap: 8px; }
+
+/* WhatsApp icon-only button */
+.btn-wa { background: #25d366; color: #fff; border: none; padding: 7px 9px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; border-radius: var(--r-sm); }
+.btn-wa:hover { background: #1dbb58; }
+.btn-wa.copied { background: var(--teal); }
+.btn-wa svg { width: 18px; height: 18px; flex-shrink: 0; display: block; }
+
+/* Copy for chat button */
+.btn-copy { background: var(--surface); color: var(--text); border: 1px solid var(--border);
+  padding: 7px 13px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.4px;
+  cursor: pointer; display: flex; align-items: center; gap: 6px;
+  transition: background 0.15s, border-color 0.15s; border-radius: var(--r-sm); font-family: inherit; }
+.btn-copy:hover { background: var(--border2); }
+.btn-copy.copied { background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
+.btn-copy svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+table { width: 100%; border-collapse: collapse; }
+thead th { padding: 10px 14px; text-align: left; font-size: 0.6rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px; color: var(--muted); background: var(--surface);
+  cursor: pointer; user-select: none; white-space: nowrap; border-bottom: 1px solid var(--border2); }
+thead th:hover { color: var(--text); }
+tbody tr { border-bottom: 1px solid var(--border2); transition: background 0.1s; }
+tbody tr:hover { background: var(--surface); }
+tbody tr:last-child { border-bottom: none; }
+td { padding: 13px 14px; font-size: 0.83rem; vertical-align: middle; }
+
+/* Matchup cell */
+.matchup-vs { display: flex; align-items: center; gap: 8px; }
+.team-side { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.team-logo-wrap { width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.team-logo { width: 30px; height: 30px; object-fit: contain; }
+.team-logo-fallback { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; font-size: 0.58rem; font-weight: 800; border: 1.5px solid var(--border); color: #fff; }
+.team-info { min-width: 0; }
+.team-short { font-weight: 800; font-size: 0.8rem; color: var(--text); line-height: 1.1; }
+.venue-tag { display: inline-block; font-size: 0.54rem; font-weight: 700; letter-spacing: 0.3px;
+  padding: 1px 6px; margin-top: 2px; border-radius: var(--r-pill); }
+.venue-home { background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal-mid); }
+.venue-away { background: var(--surface); color: var(--muted); border: 1px solid var(--border); }
+.vs-divider { font-size: 0.65rem; font-weight: 700; color: var(--muted); flex-shrink: 0; }
+.pick-text { color: var(--muted); font-size: 0.72rem; margin-top: 4px; }
+
+.odds-pill { display: inline-block; padding: 3px 9px; background: var(--burg-soft);
+  border: 1px solid var(--burg-mid); color: var(--burg); font-size: 0.8rem; font-weight: 700; border-radius: var(--r-sm); }
+
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; border-radius: var(--r-pill); }
+.badge-won     { background: var(--green-soft); color: var(--green); border: 1px solid #b3e0cc; }
+.badge-lost    { background: var(--burg-soft);  color: var(--burg);  border: 1px solid var(--burg-mid); }
+.badge-pending { background: var(--yellow-soft);color: var(--yellow);border: 1px solid var(--yellow-mid); }
+
+.game-badge { display: inline-block; padding: 2px 9px; font-size: 0.62rem; font-weight: 700;
+  background: var(--teal-soft); color: var(--teal); border: 1px solid var(--teal-mid);
+  border-radius: var(--r-pill); cursor: pointer; }
+.game-badge.bust { background: var(--burg-soft); color: var(--burg); border-color: var(--burg-mid); }
+
+.pnl-pos { color: var(--green); font-weight: 700; }
+.pnl-neg { color: var(--burg);  font-weight: 700; }
+.pnl-nil { color: var(--muted); }
+
+/* Confidence column */
+.conf-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; }
+.conf-pill { display: inline-flex; align-items: center; gap: 3px; padding: 3px 8px;
+  font-size: 0.65rem; font-weight: 700; border-radius: var(--r-pill); white-space: nowrap; cursor: default; }
+.conf-elite  { background: var(--cyan-soft); color: var(--cyan);   border: 1px solid #9de0e8; }
+.conf-high   { background: var(--green-soft);color: var(--green);  border: 1px solid #b3e0cc; }
+.conf-medium { background: var(--yellow-soft);color: var(--yellow);border: 1px solid var(--yellow-mid); }
+.conf-specul { background: var(--teal-soft); color: var(--teal);   border: 1px solid var(--teal-mid); }
+.conf-none   { background: var(--surface);   color: var(--muted);  border: 1px solid var(--border); }
+.conf-tip { visibility: hidden; opacity: 0; position: absolute; bottom: calc(100% + 8px); left: 50%;
+  transform: translateX(-50%); background: var(--text); color: #fff; padding: 10px 13px; font-size: 0.7rem;
+  white-space: normal; width: 240px; line-height: 1.5; z-index: 200; border-radius: var(--r-sm);
+  transition: opacity 0.15s; pointer-events: none; box-shadow: 0 8px 24px rgba(28,20,14,0.25); }
+.conf-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--text); }
+.conf-wrap:hover .conf-tip { visibility: visible; opacity: 1; }
+
+.reasoning-cell { max-width: 270px; color: var(--muted); font-size: 0.74rem; white-space: normal; word-break: break-word; line-height: 1.45; }
+
+.empty-state { text-align: center; padding: 56px; color: var(--muted); }
+.copy-toast { position: fixed; bottom: 24px; right: 24px; background: var(--text); color: #fff;
+  padding: 10px 18px; font-size: 0.82rem; font-weight: 600; border-radius: var(--r-sm);
+  opacity: 0; transition: opacity 0.25s; pointer-events: none; z-index: 9999; }
+.copy-toast.show { opacity: 1; }
+
+@media (max-width: 900px) { .analytics-section { grid-template-columns: 1fr; } }
+
+/* ── MOBILE BET CARDS ── */
+.bet-cards-mobile { display: none; padding: 12px; }
+.bet-card {
+  background: var(--card); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 14px 16px; margin-bottom: 10px;
+  box-shadow: var(--shadow); position: relative; }
+.bet-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.bet-card-date { font-size: 0.7rem; color: var(--muted); font-weight: 500; }
+.bet-card-matchup {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 6px; margin-bottom: 10px; }
+.bet-card-team { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.bet-card-team img { width: 32px; height: 32px; object-fit: contain; }
+.bet-card-team-name { font-size: 0.72rem; font-weight: 700; text-align: center; color: var(--text); }
+.bet-card-venue { font-size: 0.6rem; color: var(--muted); }
+.bet-card-vs { font-size: 0.65rem; font-weight: 800; color: var(--muted); letter-spacing: 1px; flex-shrink: 0; }
+.bet-card-pick { font-size: 0.78rem; font-weight: 700; color: var(--burg); margin-bottom: 10px;
+  background: var(--burg-soft); padding: 5px 10px; border-radius: var(--r-sm); text-align: center; }
+.bet-card-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.bet-card-chip { background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--r-pill); padding: 4px 10px; font-size: 0.68rem; font-weight: 600; color: var(--text); }
+.bet-card-chip span { color: var(--muted); font-weight: 400; margin-right: 3px; }
+.bet-card-pnl-pos { color: var(--green); font-weight: 700; }
+.bet-card-pnl-neg { color: #c0392b; font-weight: 700; }
+.bet-card-reasoning { font-size: 0.7rem; color: var(--muted); margin-top: 6px;
+  padding-top: 8px; border-top: 1px solid var(--border2); line-height: 1.5; }
+
+@media (max-width: 768px) {
+  .header-top,.nav-tabs,.scoreboard,.chart-section,.analytics-section,.filters-bar,.table-section,.draft-section {
+    margin-left: 12px; margin-right: 12px; }
+  .reasoning-cell { display: none; }
+  .analytics-section { grid-template-columns: 1fr; }
+  /* Switch table → cards */
+  table, thead { display: none !important; }
+  .bet-cards-mobile { display: block; }
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-label">JEREMIAS</div>
+  <div style="overflow:hidden;flex:1">
+    <div class="ticker-scroll" id="tickerScroll">
+      <span class="ticker-item">Loading…</span>
+      <span class="ticker-item">Loading…</span>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon" style="background:none;box-shadow:none;padding:2px">
+        <img src="https://a.espncdn.com/i/teamlogos/leagues/500/nba.png" style="width:42px;height:42px;object-fit:contain" alt="NBA"/>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">JEREMIAS TRADES</div>
+        <div class="brand-sub">Tracking your favourite NBA bets!</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div class="header-meta">Last updated &nbsp;<strong id="lastUpdated">—</strong></div>
+      <div class="live-badge"><span class="live-dot"></span> Tracking active</div>
+    </div>
+  </div>
+  <div class="nav-tabs" id="gameTabs"></div>
+</header>
+
+<!-- BUST BANNER -->
+<div class="bust-banner" id="bustBanner" style="display:none">
+  <span style="font-size:1.3rem">🔴</span>
+  <span id="bustMessage"></span>
+</div>
+
+<!-- SCOREBOARD -->
+<div class="scoreboard">
+  <div class="score-card sc-burg">
+    <div class="score-label">💰 Bankroll</div>
+    <div class="score-value sc-burg" id="statBankroll">—</div>
+    <div class="score-sub" id="statBankrollSub">Started with €1,000</div>
+  </div>
+  <div class="score-card sc-teal" id="pnlCell">
+    <div class="score-label">📈 Net P&L</div>
+    <div class="score-value" id="statPnl">—</div>
+    <div class="score-sub" id="statPnlSub">No settled bets</div>
+  </div>
+  <div class="score-card sc-cyan">
+    <div class="score-label">⏳ Pending</div>
+    <div class="score-value" style="color:var(--cyan)" id="statPending">—</div>
+    <div class="score-sub" id="statPendingSub">—</div>
+  </div>
+  <div class="score-card">
+    <div class="score-label">📊 Total Staked</div>
+    <div class="score-value" id="statStaked">—</div>
+    <div class="score-sub" id="statROI">ROI: —</div>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-section">
+  <div class="section-header">
+    <div class="section-title">BANKROLL <span>OVER TIME</span></div>
+    <div style="font-size:0.7rem;color:var(--muted)" id="chartGameLabel"></div>
+  </div>
+  <div class="chart-wrap"><div id="bankrollChart"></div></div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="analytics-section">
+  <div class="analytics-card">
+    <div class="section-header">
+      <div class="section-title">W / L <span>BREAKDOWN</span></div>
+      <div style="font-size:0.68rem;color:var(--muted)" id="wlSubtitle"></div>
+    </div>
+    <div class="donut-wrap">
+      <div class="donut-canvas-wrap">
+        <canvas id="wlChart"></canvas>
+        <div class="donut-center" id="donutCenter">
+          <div class="donut-pct" id="donutPct">—</div>
+          <div class="donut-lbl">Win Rate</div>
+        </div>
+      </div>
+      <div class="donut-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div><span id="legendWon">0 Won</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--burg)"></div><span id="legendLost">0 Lost</span></div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div><span id="legendPending">0 Pending</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="analytics-card">
+    <div class="section-header">
+      <div class="section-title">BET <span>ANALYTICS</span></div>
+    </div>
+    <div class="stats-grid" id="analyticsStats"></div>
+  </div>
+</div>
+
+<!-- DRAFT PICKS -->
+<div class="draft-section" id="draftSection" style="display:none">
+  <div class="draft-header">
+    <div class="draft-title">⏳ Tonight's Scout Picks — awaiting 22:30 injury check</div>
+    <div class="draft-subtitle" id="draftSubtitle"></div>
+  </div>
+  <div class="draft-grid" id="draftGrid"></div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-bar">
+  <span class="filter-label">Filter:</span>
+  <select id="filterResult">
+    <option value="all">All Results</option>
+    <option value="WON">Won ✅</option>
+    <option value="LOST">Lost ❌</option>
+    <option value="pending">Pending ⏳</option>
+  </select>
+  <input type="date" id="filterDate" title="Filter by date"/>
+  <input type="text" id="filterSearch" placeholder="Search team or pick…" style="min-width:200px"/>
+  <button class="btn-reset" onclick="resetFilters()">✕ Reset</button>
+  <span class="filter-count" id="filterCount"></span>
+</div>
+
+<!-- TABLE -->
+<div class="table-section">
+  <div class="table-head-bar">
+    <div class="table-head-title">BET <span>HISTORY</span></div>
+    <div class="table-head-actions">
+      <button class="btn-wa" id="btnWA" onclick="shareToWhatsApp()" title="Share on WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </button>
+      <button class="btn-copy" id="btnCopyChat" onclick="copyForChat()" title="Copy for chat">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        Copy
+      </button>
+    </div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th onclick="sortTable('date')">Date ⇅</th>
+        <th onclick="sortTable('match')">Matchup ⇅</th>
+        <th onclick="sortTable('odds')">Odds ⇅</th>
+        <th onclick="sortTable('stake')">Stake ⇅</th>
+        <th>Potential</th>
+        <th onclick="sortTable('result')">Result ⇅</th>
+        <th onclick="sortTable('pnl')">P&L ⇅</th>
+        <th onclick="sortTable('confidence')">Conf. ⇅</th>
+        <th id="gameColHeader" style="display:none">Game</th>
+        <th>Analysis</th>
+      </tr>
+    </thead>
+    <tbody id="betTableBody"></tbody>
+  </table>
+  <div class="bet-cards-mobile" id="betCardsMobile"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <span style="font-size:2.5rem;display:block;margin-bottom:10px">🏀</span>
+    No bets match your filters.
+  </div>
+</div>
+<div id="copyToast" class="copy-toast"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const HISTORY_DATA = {
+  "simulation_start": "2026-03-08",
+  "initial_bankroll": 1000.00,
+  "sport": "NBA",
+  "games": [
+    { "session": 1, "start_date": "2026-03-08", "end_date": null,
+      "peak_bankroll": 1439.00, "final_bankroll": null, "net_pnl": null,
+      "total_bets": 6, "wins": 3, "losses": 0 }
+  ],
+  "entries": [
+    {
+      "entry_id": "nba_entry_20260308", "session": 1,
+      "timestamp": "2026-03-08T19:00:00", "type": "bets_placed",
+      "bankroll_before": 1000.00, "total_staked": 400.00, "bankroll_after": 1439.00,
+      "bets": [
+        { "id":"nba_bet_20260308_001","match":"Miami Heat vs Detroit Pistons","time":"22:00",
+          "pick":"Miami Heat ML","odds":1.98,"stake":150,"potential_return":297,
+          "reasoning":"Heat near even money at 1.98 vs Pistons — historically resilient franchise under Spoelstra; competitive matchup for both teams fighting for playoff position",
+          "confidence":65,"anchor_players":[],"result":"WON","returned":297,"pnl":147,"settled_at":"2026-03-09T14:00:00"},
+        { "id":"nba_bet_20260308_002","match":"Sacramento Kings vs Chicago Bulls","time":"01:00",
+          "pick":"Sacramento Kings ML","odds":2.00,"stake":150,"potential_return":300,
+          "reasoning":"Kings at even money (2.00) offers excellent value; De'Aaron Fox and Domantas Sabonis-led offense capable of winning at home; road Bulls at 1.70 seems overpriced",
+          "confidence":70,"anchor_players":["De'Aaron Fox","Domantas Sabonis"],"result":"WON","returned":300,"pnl":150,"settled_at":"2026-03-09T14:00:00"},
+        { "id":"nba_bet_20260308_003","match":"Phoenix Suns vs Charlotte Hornets","time":"02:00",
+          "pick":"Phoenix Suns ML","odds":2.42,"stake":100,"potential_return":242,
+          "reasoning":"Suns at 2.42 looks undervalued for a talent-rich roster; speculative play on market overreaction to recent Suns struggles; home court advantage",
+          "confidence":52,"anchor_players":[],"result":"WON","returned":242,"pnl":142,"settled_at":"2026-03-09T14:00:00"}
+      ],
+      "summary": "ALL 3 WON! Net P&L: +€439. Bankroll: €1000 → €1439."
+    },
+    {
+      "entry_id": "nba_entry_20260309", "session": 1,
+      "timestamp": "2026-03-09T22:30:00", "type": "bets_placed",
+      "bankroll_before": 1439.00, "total_staked": 790.00, "bankroll_after": 649.00,
+      "bets": [
+        { "id":"nba_bet_20260309_001","match":"Cleveland Cavaliers vs Philadelphia 76ers","time":"00:00",
+          "pick":"Cleveland Cavaliers -12.5","odds":1.91,"stake":360,"potential_return":687.60,
+          "reasoning":"76ers are catastrophically undermanned: Embiid OUT (oblique), Paul George OUT (suspension), Maxey OUT (finger) — their top 3 players all absent. Cavaliers have Mitchell back from injury and are at near full strength.",
+          "confidence":80,"anchor_players":["Donovan Mitchell"],"result":null,"returned":null,"pnl":null,"settled_at":null},
+        { "id":"nba_bet_20260309_002","match":"Oklahoma City Thunder vs Denver Nuggets","time":"00:30",
+          "pick":"Denver Nuggets +7.5","odds":1.91,"stake":215,"potential_return":410.65,
+          "reasoning":"OKC is severely depleted: Jalen Williams OUT (hamstring), Isaiah Hartenstein OUT (calf). Jokic confirmed playing. Getting +7.5 against a 4-man-down OKC with Jokic available is excellent spread value.",
+          "confidence":65,"anchor_players":["Nikola Jokic","Jamal Murray"],"result":null,"returned":null,"pnl":null,"settled_at":null},
+        { "id":"nba_bet_20260309_003","match":"Brooklyn Nets vs Memphis Grizzlies","time":"23:30",
+          "pick":"Memphis Grizzlies ML","odds":1.75,"stake":215,"potential_return":376.25,
+          "reasoning":"Michael Porter Jr. confirmed OUT for the Nets. Grizzlies are the more complete team — better depth, coaching, defensive intensity. Nets near bottom of East.",
+          "confidence":64,"anchor_players":[],"result":null,"returned":null,"pnl":null,"settled_at":null}
+      ],
+      "summary": "Day 2 commit — 3 picks totalling €790. Bankroll: €1439 → €649."
+    }
+  ]
+};
+
+const DRAFT_PICKS = [];
+
+// ── FLATTEN ───────────────────────────────────────────────────────────────────
+let allBets = [];
+HISTORY_DATA.entries.forEach(e => {
+  (e.bets||[]).forEach(b => {
+    allBets.push({ date: e.timestamp.split('T')[0], session: e.session||1, ...b,
+      status: b.result ? b.result : 'pending' });
+  });
+});
+
+const sessions = HISTORY_DATA.games || [{ session:1, start_date: HISTORY_DATA.simulation_start }];
+let activeSession = sessions.at(-1).session;
+
+// ── TICKER ────────────────────────────────────────────────────────────────────
+function buildTicker() {
+  const settled = allBets.filter(b => b.result);
+  const won = settled.filter(b => b.result==='WON');
+  const stats = computeStats();
+  const items = [
+    `Bankroll: <span class="pend">€${stats.bankroll.toFixed(2)}</span>`,
+    `Record: <span class="win">${won.length}W</span> / <span class="loss">${settled.length - won.length}L</span>`,
+    ...allBets.slice(-4).map(b =>
+      `${b.match} — ${b.pick} <span class="${b.result?(b.result==='WON'?'win':'loss'):'pend'}">${b.result||'PENDING'}</span>`
+    ),
+    `Two-phase system: 14:00 scout · 22:30 commit`,
+    `Smart staking: max 30% per bet · 30% reserve`
+  ];
+  const doubled = [...items, ...items];
+  document.getElementById('tickerScroll').innerHTML = doubled.map(i => `<span class="ticker-item">${i}</span>`).join('');
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function renderTabs() {
+  const c = document.getElementById('gameTabs');
+  const tabs = sessions.map(s => `
+    <button class="nav-tab ${s.session===activeSession?'active':''}" onclick="switchSession(${s.session})">
+      GAME ${s.session} <span class="dot ${s.end_date?'off':'on'}"></span>
+    </button>`).join('');
+  const all = `<button class="nav-tab ${'all'===activeSession?'active':''}" onclick="switchSession('all')">ALL GAMES</button>`;
+  c.innerHTML = tabs + all;
+}
+function switchSession(n) {
+  activeSession = n;
+  renderTabs(); renderStats(); renderChart(); renderAnalytics(); renderDraftPicks(); renderTable();
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function computeStats() {
+  const sb = activeSession==='all' ? allBets : allBets.filter(b => b.session===activeSession);
+  const settled = sb.filter(b => b.result);
+  const won = settled.filter(b => b.result==='WON');
+  const lost = settled.filter(b => b.result==='LOST');
+  const pending = sb.filter(b => !b.result);
+  const si = activeSession==='all' ? {} : (sessions.find(s=>s.session===activeSession)||{});
+  const totalStaked   = sb.reduce((s,b)=>s+b.stake,0);
+  const totalReturned = won.reduce((s,b)=>s+(b.returned||0),0);
+  const netPnl = totalReturned - totalStaked;
+  const sessionStart = HISTORY_DATA.initial_bankroll;
+  const bankroll = activeSession==='all'
+    ? sessions.length*sessionStart - totalStaked + totalReturned
+    : sessionStart - totalStaked + totalReturned;
+  const peak    = si.peak_bankroll || sessionStart;
+  const winRate = settled.length ? Math.round(won.length/settled.length*100) : null;
+  const roi     = totalStaked ? ((netPnl/totalStaked)*100).toFixed(1) : null;
+  return { settled,won,lost,pending,totalStaked,totalReturned,netPnl,bankroll,peak,winRate,roi,sessionInfo:si };
+}
+
+function renderStats() {
+  const s = computeStats();
+  const fmt = v => `€${v.toFixed(2)}`;
+  const sgn = v => (v>=0?'+':'')+fmt(v);
+  const isBust = activeSession!=='all' && s.sessionInfo.end_date!=null;
+  document.getElementById('bustBanner').style.display = isBust ? 'flex' : 'none';
+  if (isBust) document.getElementById('bustMessage').textContent =
+    `Game ${activeSession} went bust on ${s.sessionInfo.end_date}. Peak: €${s.peak.toFixed(2)}.`;
+
+  document.getElementById('statBankroll').textContent = fmt(s.bankroll);
+  document.getElementById('statBankrollSub').textContent = activeSession==='all'
+    ? `Across ${sessions.length} game(s)` : `Peak: ${fmt(s.peak)} · Game ${activeSession}`;
+
+  const pnlEl = document.getElementById('statPnl');
+  pnlEl.textContent = s.settled.length ? sgn(s.netPnl) : '—';
+  pnlEl.className = 'score-value ' + (s.netPnl>0?'sc-green':s.netPnl<0?'sc-burg':'');
+  document.getElementById('statPnlSub').textContent = s.settled.length
+    ? `${s.won.length}W / ${s.lost.length}L settled` : 'No settled bets';
+
+  document.getElementById('statPending').textContent = s.pending.length;
+  document.getElementById('statPendingSub').textContent = `€${s.pending.reduce((a,b)=>a+b.stake,0).toFixed(2)} at risk`;
+
+  document.getElementById('statStaked').textContent = fmt(s.totalStaked);
+  document.getElementById('statROI').textContent = `ROI: ${s.roi!==null ? s.roi+'%' : '—'}`;
+
+  const lastEntry = HISTORY_DATA.entries.at(-1);
+  document.getElementById('lastUpdated').textContent = lastEntry
+    ? new Date(lastEntry.timestamp).toLocaleString('pt-PT') : '—';
+  document.getElementById('chartGameLabel').textContent = activeSession==='all'
+    ? `All Games · ${sessions.length} total` : `Game ${activeSession}`;
+}
+
+// ── CHART ─────────────────────────────────────────────────────────────────────
+let apexInst = null;
+function renderChart() {
+  if (apexInst) { apexInst.destroy(); apexInst = null; }
+  const entries = activeSession==='all'
+    ? HISTORY_DATA.entries
+    : HISTORY_DATA.entries.filter(e=>(e.session||1)===activeSession);
+  const labels = ['Start'], values = [HISTORY_DATA.initial_bankroll];
+  let run = HISTORY_DATA.initial_bankroll;
+  entries.forEach(e => {
+    run -= e.total_staked||0;
+    run += (e.bets||[]).reduce((s,b)=>s+(b.returned||0),0);
+    labels.push(e.timestamp.split('T')[0]);
+    values.push(parseFloat(run.toFixed(2)));
+  });
+  const isPos = values.at(-1) >= values[0];
+  const col = isPos ? '#2a6b4a' : '#7c1d34';
+  apexInst = new ApexCharts(document.getElementById('bankrollChart'), {
+    chart:{ type:'area', height:200, toolbar:{show:false}, zoom:{enabled:false},
+      fontFamily:"'Satoshi',-apple-system,BlinkMacSystemFont,'DM Sans',sans-serif", background:'transparent',
+      animations:{enabled:true,speed:700} },
+    series:[{name:'Bankroll',data:values}], colors:[col],
+    stroke:{curve:'smooth',width:2.5},
+    fill:{type:'gradient',gradient:{shadeIntensity:1,opacityFrom:0.25,opacityTo:0.01,stops:[0,85,100]}},
+    markers:{size:5,colors:['#ffffff'],strokeColors:col,strokeWidth:2.5,hover:{size:7}},
+    xaxis:{categories:labels,axisBorder:{show:false},axisTicks:{show:false},
+      labels:{style:{colors:'#7a6e65',fontSize:'11px'}}},
+    yaxis:{labels:{formatter:v=>`€${v.toLocaleString('pt-PT')}`,style:{colors:'#7a6e65',fontSize:'11px'}},tickAmount:4},
+    grid:{borderColor:'#ede5da',strokeDashArray:4,xaxis:{lines:{show:false}},padding:{top:4,right:16,bottom:0,left:4}},
+    tooltip:{theme:'dark',x:{show:true},y:{formatter:v=>{const d=v-values[0];return`€${v.toFixed(2)}  ${d>=0?'▲':'▼'} ${d>=0?'+':''}€${d.toFixed(2)}`;}},marker:{show:false}},
+    annotations:{yaxis:[{y:values[0],borderColor:'#e2d9cc',borderWidth:1,strokeDashArray:5,
+      label:{text:`Start €${values[0].toLocaleString('pt-PT')}`,position:'right',offsetX:-10,
+        style:{color:'#7a6e65',background:'transparent',fontSize:'10px',fontWeight:600}}}]},
+    dataLabels:{enabled:false},legend:{show:false}
+  });
+  apexInst.render();
+}
+
+// ── CONF HELPERS ──────────────────────────────────────────────────────────────
+function confClass(c) {
+  if (c>=85) return 'conf-elite';
+  if (c>=70) return 'conf-high';
+  if (c>=55) return 'conf-medium';
+  if (c>=40) return 'conf-specul';
+  return 'conf-none';
+}
+function confLabel(c) {
+  if (c>=85) return '🔥 Elite';
+  if (c>=70) return '✅ High';
+  if (c>=55) return '🟡 Medium';
+  if (c>=40) return '🔵 Speculative';
+  return '—';
+}
+function calibrationScore(bets) {
+  const settled = bets.filter(b=>b.result&&b.confidence!=null);
+  if (!settled.length) return null;
+  const mse = settled.reduce((s,b)=>{
+    const o = b.result==='WON'?1:0;
+    const d = (b.confidence/100)-o;
+    return s+d*d;
+  },0)/settled.length;
+  return Math.round((1-mse)*100);
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────────────────────────
+let wlInst = null;
+function renderAnalytics() {
+  const sb = activeSession==='all' ? allBets : allBets.filter(b=>b.session===activeSession);
+  const won = sb.filter(b=>b.result==='WON');
+  const lost = sb.filter(b=>b.result==='LOST');
+  const pending = sb.filter(b=>!b.result);
+  const settled = [...won,...lost];
+
+  document.getElementById('legendWon').textContent = `${won.length} Won`;
+  document.getElementById('legendLost').textContent = `${lost.length} Lost`;
+  document.getElementById('legendPending').textContent = `${pending.length} Pending`;
+  document.getElementById('wlSubtitle').textContent = `${settled.length} settled`;
+  const wr = settled.length ? Math.round(won.length/settled.length*100) : null;
+  document.getElementById('donutPct').textContent = wr!==null ? `${wr}%` : '—';
+
+  if (wlInst) { wlInst.destroy(); wlInst=null; }
+  const ctx = document.getElementById('wlChart').getContext('2d');
+  const hasData = won.length+lost.length+pending.length>0;
+  wlInst = new Chart(ctx, {
+    type:'doughnut',
+    data:{ labels:['Won','Lost','Pending'], datasets:[{
+      data: hasData?[won.length,lost.length,pending.length]:[1],
+      backgroundColor: hasData?['#2a6b4a','#7c1d34','#b08800']:['#e2d9cc'],
+      borderWidth: hasData?2:0, borderColor:'#fff', hoverOffset:6 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'68%',
+      plugins:{ legend:{display:false}, tooltip:{callbacks:{
+        label:c=>hasData?` ${c.label}: ${c.parsed}`:' No bets yet' }} } }
+  });
+
+  const avgOW = won.length  ? (won.reduce((s,b)=>s+b.odds,0)/won.length).toFixed(2)  : '—';
+  const avgOL = lost.length ? (lost.reduce((s,b)=>s+b.odds,0)/lost.length).toFixed(2) : '—';
+  const avgSt = sb.length ? (sb.reduce((s,b)=>s+b.stake,0)/sb.length).toFixed(2) : '—';
+  const totalPnl = settled.reduce((s,b)=>s+(b.pnl||0),0);
+  const totalSt  = settled.reduce((s,b)=>s+b.stake,0);
+  const roi = totalSt ? ((totalPnl/totalSt)*100).toFixed(1) : null;
+  const ss = [...settled].sort((a,b)=>(b.pnl||0)-(a.pnl||0));
+  const best  = ss[0]||null;
+  const worst = ss.at(-1)||null;
+  const sortedS = [...settled].sort((a,b)=>new Date(b.settled_at||0)-new Date(a.settled_at||0));
+  let streak=0, sType=null;
+  for (const b of sortedS) {
+    if (sType===null){sType=b.result;streak=1;}
+    else if (b.result===sType) streak++;
+    else break;
+  }
+  const streakHtml = settled.length===0
+    ? `<span class="streak-badge streak-n">No results yet</span>`
+    : sType==='WON'
+      ? `<span class="streak-badge streak-w">🔥 ${streak}W streak</span>`
+      : `<span class="streak-badge streak-l">❄️ ${streak}L streak</span>`;
+  const ev = settled.length
+    ? ((won.length/settled.length)*parseFloat(avgOW==='—'?0:avgOW)-1).toFixed(3) : null;
+
+  const wConf = sb.filter(b=>b.confidence!=null);
+  const avgCA = wConf.length ? Math.round(wConf.reduce((s,b)=>s+b.confidence,0)/wConf.length) : null;
+  const avgCW = won.filter(b=>b.confidence!=null);
+  const avgCL = lost.filter(b=>b.confidence!=null);
+  const avgCWv = avgCW.length ? Math.round(avgCW.reduce((s,b)=>s+b.confidence,0)/avgCW.length) : null;
+  const avgCLv = avgCL.length ? Math.round(avgCL.reduce((s,b)=>s+b.confidence,0)/avgCL.length) : null;
+  const calib  = calibrationScore(sb);
+  const calibCol = calib===null?'':calib>=75?'green':calib>=55?'':' burg';
+  const calibBarCol = calib===null?'#e2d9cc':calib>=75?'#2a6b4a':calib>=55?'#b08800':'#7c1d34';
+
+  document.getElementById('analyticsStats').innerHTML = `
+    <div class="a-stat">
+      <div class="a-stat-label">Avg Odds — Won</div>
+      <div class="a-stat-value green">${avgOW==='—'?'—':'×'+avgOW}</div>
+      <div class="a-stat-sub">vs Lost: ${avgOL==='—'?'—':'×'+avgOL}</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">ROI (Settled)</div>
+      <div class="a-stat-value ${roi!==null?(parseFloat(roi)>=0?'green':'burg'):''}">${roi!==null?roi+'%':'—'}</div>
+      <div class="a-stat-sub">On €${totalSt.toFixed(2)} staked</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">Best Bet</div>
+      <div class="a-stat-value green">${best?'+€'+best.pnl.toFixed(2):'—'}</div>
+      <div class="a-stat-sub">${best?best.pick:'No results yet'}</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">Worst Bet</div>
+      <div class="a-stat-value ${worst&&worst.pnl<0?'burg':''}">${worst&&worst!==best?(worst.pnl>=0?'+':'')+`€${worst.pnl.toFixed(2)}`:'—'}</div>
+      <div class="a-stat-sub">${worst&&worst!==best?worst.pick:'No losses yet'}</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">Avg Stake</div>
+      <div class="a-stat-value">€${avgSt}</div>
+      <div class="a-stat-sub">${sb.length} total bets</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">Current Streak</div>
+      <div class="a-stat-value">${streakHtml}</div>
+      <div class="a-stat-sub">Edge proxy: ${ev!==null?(parseFloat(ev)>=0?'+':'')+ev:'—'}</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">Avg Confidence</div>
+      <div class="a-stat-value">${avgCA!==null?`<span class="conf-pill ${confClass(avgCA)}">${avgCA}/100</span>`:'—'}</div>
+      <div class="a-stat-sub">Won: ${avgCWv??'—'} &nbsp;·&nbsp; Lost: ${avgCLv??'—'}</div>
+    </div>
+    <div class="a-stat">
+      <div class="a-stat-label">Calibration Score</div>
+      <div class="a-stat-value ${calibCol}">${calib!==null?calib+'/100':'—'}</div>
+      <div class="calib-bar-bg"><div class="calib-bar" style="width:${calib??0}%;background:${calibBarCol}"></div></div>
+      <div class="a-stat-sub">${calib===null?'Needs scored bets':calib>=75?'Well calibrated 🎯':calib>=55?'Decent':'Overconfident ⚠️'}</div>
+    </div>`;
+}
+
+// ── TEAM MAP ──────────────────────────────────────────────────────────────────
+const TEAM_MAP = {
+  'hawks':{abbr:'ATL',short:'Hawks',espn:'atl',bg:'#e03a3e'},
+  'celtics':{abbr:'BOS',short:'Celtics',espn:'bos',bg:'#007a33'},
+  'nets':{abbr:'BKN',short:'Nets',espn:'bkn',bg:'#000000'},
+  'hornets':{abbr:'CHA',short:'Hornets',espn:'cha',bg:'#1d1160'},
+  'bulls':{abbr:'CHI',short:'Bulls',espn:'chi',bg:'#ce1141'},
+  'cavaliers':{abbr:'CLE',short:'Cavs',espn:'cle',bg:'#860038'},
+  'mavericks':{abbr:'DAL',short:'Mavs',espn:'dal',bg:'#00538c'},
+  'nuggets':{abbr:'DEN',short:'Nuggets',espn:'den',bg:'#0e2240'},
+  'pistons':{abbr:'DET',short:'Pistons',espn:'det',bg:'#c8102e'},
+  'warriors':{abbr:'GSW',short:'Warriors',espn:'gs',bg:'#1d428a'},
+  'rockets':{abbr:'HOU',short:'Rockets',espn:'hou',bg:'#ce1141'},
+  'pacers':{abbr:'IND',short:'Pacers',espn:'ind',bg:'#002d62'},
+  'clippers':{abbr:'LAC',short:'Clippers',espn:'lac',bg:'#c8102e'},
+  'lakers':{abbr:'LAL',short:'Lakers',espn:'lal',bg:'#552583'},
+  'grizzlies':{abbr:'MEM',short:'Grizzlies',espn:'mem',bg:'#5d76a9'},
+  'heat':{abbr:'MIA',short:'Heat',espn:'mia',bg:'#98002e'},
+  'bucks':{abbr:'MIL',short:'Bucks',espn:'mil',bg:'#00471b'},
+  'timberwolves':{abbr:'MIN',short:'Wolves',espn:'min',bg:'#0c2340'},
+  'pelicans':{abbr:'NOP',short:'Pelicans',espn:'no',bg:'#0c2340'},
+  'knicks':{abbr:'NYK',short:'Knicks',espn:'ny',bg:'#006bb6'},
+  'thunder':{abbr:'OKC',short:'Thunder',espn:'okc',bg:'#007ac1'},
+  'magic':{abbr:'ORL',short:'Magic',espn:'orl',bg:'#0077c0'},
+  '76ers':{abbr:'PHI',short:'Sixers',espn:'phi',bg:'#006bb6'},
+  'sixers':{abbr:'PHI',short:'Sixers',espn:'phi',bg:'#006bb6'},
+  'suns':{abbr:'PHX',short:'Suns',espn:'phx',bg:'#1d1160'},
+  'blazers':{abbr:'POR',short:'Blazers',espn:'por',bg:'#e03a3e'},
+  'kings':{abbr:'SAC',short:'Kings',espn:'sac',bg:'#5a2d81'},
+  'spurs':{abbr:'SAS',short:'Spurs',espn:'sa',bg:'#c4ced4'},
+  'raptors':{abbr:'TOR',short:'Raptors',espn:'tor',bg:'#ce1141'},
+  'jazz':{abbr:'UTA',short:'Jazz',espn:'utah',bg:'#002b5c'},
+  'wizards':{abbr:'WAS',short:'Wizards',espn:'wsh',bg:'#002b5c'},
+};
+function getTeamInfo(name) {
+  const n = name.toLowerCase();
+  for (const [k,v] of Object.entries(TEAM_MAP)) { if (n.includes(k)) return v; }
+  const words = name.trim().split(' ').filter(Boolean);
+  const last = words[words.length-1]||name;
+  return {abbr:last.slice(0,3).toUpperCase(),short:last,espn:null,bg:'#5a4a3a'};
+}
+function logoHtml(teamName) {
+  const t = getTeamInfo(teamName);
+  if (t.espn) return `<div class="team-logo-wrap">
+    <img class="team-logo" src="https://a.espncdn.com/i/teamlogos/nba/500/${t.espn}.png"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${t.abbr}">
+    <div class="team-logo-fallback" style="display:none;background:${t.bg}">${t.abbr}</div>
+  </div>`;
+  return `<div class="team-logo-wrap"><div class="team-logo-fallback" style="background:${t.bg}">${t.abbr}</div></div>`;
+}
+
+// ── DRAFT PICKS ───────────────────────────────────────────────────────────────
+function renderDraftPicks() {
+  const sec = document.getElementById('draftSection');
+  if (!DRAFT_PICKS||!DRAFT_PICKS.length){sec.style.display='none';return;}
+  sec.style.display='';
+  const totalSt = DRAFT_PICKS.reduce((s,p)=>s+p.stake,0);
+  const dt = DRAFT_PICKS[0].drafted_at?DRAFT_PICKS[0].drafted_at.split('T')[0]:'';
+  document.getElementById('draftSubtitle').textContent =
+    `${DRAFT_PICKS.length} picks · €${totalSt.toFixed(2)} proposed · scouted ${dt}`;
+  document.getElementById('draftGrid').innerHTML = DRAFT_PICKS.map(p=>{
+    const teams=p.match.split(' vs ');
+    const t1=getTeamInfo(teams[0]||''), t2=getTeamInfo(teams[1]||'');
+    const anch=(p.anchor_players||[]);
+    return `<div class="draft-card">
+      <div class="draft-matchup">${logoHtml(teams[0]||'')}
+        <span style="font-size:0.75rem;font-weight:700">${t1.short}</span>
+        <span style="color:var(--muted);font-size:0.7rem">vs</span>
+        ${logoHtml(teams[1]||'')}
+        <span style="font-size:0.75rem;font-weight:700">${t2.short}</span>
+      </div>
+      <div class="draft-pick">${p.pick}</div>
+      <div class="draft-meta">
+        <span>@ ${p.odds.toFixed(2)}</span><span>€${p.stake.toFixed(2)}</span>
+        <span>→ €${p.potential_return.toFixed(2)}</span><span>${p.time||''}</span>
+        ${p.confidence!=null?`<span class="conf-pill ${confClass(p.confidence)}">${p.confidence}/100</span>`:''}
+        <span class="status-draft">⏳ Draft</span>
+      </div>
+      ${anch.length?`<div class="draft-anchors">⚓ ${anch.map(a=>`<span class="anchor-tag">${a}</span>`).join('')}</div>`:''}
+      <div class="draft-reasoning">${p.reasoning||''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── TABLE ─────────────────────────────────────────────────────────────────────
+let sortKey='date', sortAsc=false;
+function sortTable(k){sortKey===k?sortAsc=!sortAsc:(sortKey=k,sortAsc=false);renderTable();}
+function getFiltered() {
+  const res=document.getElementById('filterResult').value;
+  const date=document.getElementById('filterDate').value;
+  const search=document.getElementById('filterSearch').value.toLowerCase();
+  return allBets.filter(b=>{
+    if (activeSession!=='all'&&b.session!==activeSession) return false;
+    if (res!=='all'&&b.status!==res) return false;
+    if (date&&b.date!==date) return false;
+    if (search&&!b.match.toLowerCase().includes(search)&&!b.pick.toLowerCase().includes(search)) return false;
+    return true;
+  });
+}
+function renderTable() {
+  const filtered=getFiltered();
+  filtered.sort((a,b)=>{
+    let va=a[sortKey],vb=b[sortKey];
+    if (va===null) va=sortAsc?Infinity:-Infinity;
+    if (vb===null) vb=sortAsc?Infinity:-Infinity;
+    if (typeof va==='string') return sortAsc?va.localeCompare(vb):vb.localeCompare(va);
+    return sortAsc?va-vb:vb-va;
+  });
+  const tbody=document.getElementById('betTableBody');
+  const isAll=activeSession==='all';
+  document.getElementById('gameColHeader').style.display=isAll?'':'none';
+  const bustSet=new Set(sessions.filter(s=>s.end_date).map(s=>s.session));
+
+  if (!filtered.length){
+    tbody.innerHTML='';
+    document.getElementById('emptyState').style.display='block';
+    document.getElementById('filterCount').textContent='0 bets';
+    return;
+  }
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('filterCount').textContent=`${filtered.length} bet${filtered.length!==1?'s':''}`;
+
+  tbody.innerHTML=filtered.map(b=>{
+    const teams=b.match.split(' vs ');
+    const home=teams[0]||'', away=teams[1]||'';
+    const t1=getTeamInfo(home), t2=getTeamInfo(away);
+    const pnlTxt=b.pnl!==null
+      ?`<span class="${b.pnl>=0?'pnl-pos':'pnl-neg'}">${b.pnl>=0?'+':''}€${b.pnl.toFixed(2)}</span>`
+      :`<span class="pnl-nil">—</span>`;
+    const resBadge=b.result
+      ?`<span class="badge badge-${b.result.toLowerCase()}">${b.result==='WON'?'✔ WON':'✖ LOST'}</span>`
+      :`<span class="badge badge-pending">● PENDING</span>`;
+    const gameBadge=isAll
+      ?`<td><span class="game-badge ${bustSet.has(b.session)?'bust':''}" onclick="switchSession(${b.session})">G${b.session} ${bustSet.has(b.session)?'🔴':'🟢'}</span></td>`
+      :'';
+    return `<tr>
+      <td style="color:var(--muted);white-space:nowrap;font-size:0.78rem">
+        ${b.date}<br><span style="font-size:0.7rem">${b.time||''}</span>
+      </td>
+      <td>
+        <div class="matchup-vs">
+          <div class="team-side">
+            ${logoHtml(home)}
+            <div class="team-info">
+              <div class="team-short">${t1.short}</div>
+              <span class="venue-tag venue-home">🏠 Home</span>
+            </div>
+          </div>
+          <div class="vs-divider">vs</div>
+          <div class="team-side">
+            ${logoHtml(away)}
+            <div class="team-info">
+              <div class="team-short">${t2.short}</div>
+              <span class="venue-tag venue-away">✈️ Away</span>
+            </div>
+          </div>
+        </div>
+        <div class="pick-text">${b.pick}</div>
+      </td>
+      <td><span class="odds-pill">${b.odds.toFixed(2)}</span></td>
+      <td style="font-weight:700">€${b.stake.toFixed(2)}</td>
+      <td style="color:var(--muted)">€${b.potential_return.toFixed(2)}</td>
+      <td>${resBadge}</td>
+      <td>${pnlTxt}</td>
+      <td style="white-space:nowrap">
+        ${b.confidence!=null?`
+        <div class="conf-wrap">
+          <span class="conf-pill ${confClass(b.confidence)}">${b.confidence}/100</span>
+          <span style="font-size:0.6rem;color:var(--muted)">${confLabel(b.confidence)}</span>
+          <div class="conf-tip">
+            <strong style="font-size:0.74rem">${confLabel(b.confidence)} · ${b.confidence}/100</strong><br>
+            <span style="color:#ccc">${b.reasoning||'No justification recorded.'}</span>
+          </div>
+        </div>`:`<span style="color:var(--muted)">—</span>`}
+      </td>
+      ${gameBadge}
+      <td class="reasoning-cell">${b.reasoning||''}</td>
+    </tr>`;
+  }).join('');
+
+  // ── MOBILE CARDS ──
+  const mobileLogoHtml = (name) => {
+    const info = getTeamInfo(name);
+    if (info.espn) return `<img src="https://a.espncdn.com/i/teamlogos/nba/500/${info.espn}.png" alt="${info.short}" onerror="this.style.display='none'">`;
+    return `<div style="width:32px;height:32px;border-radius:50%;background:${info.bg};display:flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:800;color:#fff">${info.abbr}</div>`;
+  };
+  document.getElementById('betCardsMobile').innerHTML = filtered.map(b => {
+    const teams = b.match.split(' vs ');
+    const home = teams[0]||'', away = teams[1]||'';
+    const t1 = getTeamInfo(home), t2 = getTeamInfo(away);
+    const resBadge = b.result
+      ? `<span class="badge badge-${b.result.toLowerCase()}">${b.result==='WON'?'✔ WON':'✖ LOST'}</span>`
+      : `<span class="badge badge-pending">● PENDING</span>`;
+    const pnlHtml = b.pnl !== null
+      ? `<span class="bet-card-chip"><span>P&L</span><span class="${b.pnl>=0?'bet-card-pnl-pos':'bet-card-pnl-neg'}">${b.pnl>=0?'+':''}€${b.pnl.toFixed(2)}</span></span>`
+      : '';
+    const confHtml = b.confidence != null
+      ? `<span class="conf-pill ${confClass(b.confidence)}" style="font-size:0.68rem">${b.confidence}/100 ${confLabel(b.confidence)}</span>`
+      : '';
+    const reasonHtml = b.reasoning
+      ? `<div class="bet-card-reasoning">💬 ${b.reasoning}</div>` : '';
+    return `<div class="bet-card">
+      <div class="bet-card-top">
+        <span class="bet-card-date">${b.date}${b.time?' · '+b.time:''}</span>
+        ${resBadge}
+      </div>
+      <div class="bet-card-matchup">
+        <div class="bet-card-team">
+          ${mobileLogoHtml(home)}
+          <div class="bet-card-team-name">${t1.short}</div>
+          <div class="bet-card-venue">🏠 Home</div>
+        </div>
+        <div class="bet-card-vs">VS</div>
+        <div class="bet-card-team">
+          ${mobileLogoHtml(away)}
+          <div class="bet-card-team-name">${t2.short}</div>
+          <div class="bet-card-venue">✈️ Away</div>
+        </div>
+      </div>
+      <div class="bet-card-pick">${b.pick}</div>
+      <div class="bet-card-row">
+        <span class="bet-card-chip"><span>Odds</span>${b.odds.toFixed(2)}</span>
+        <span class="bet-card-chip"><span>Stake</span>€${b.stake.toFixed(2)}</span>
+        <span class="bet-card-chip"><span>Pot.</span>€${b.potential_return.toFixed(2)}</span>
+        ${pnlHtml}
+        ${confHtml}
+      </div>
+      ${reasonHtml}
+    </div>`;
+  }).join('');
+}
+
+function resetFilters() {
+  document.getElementById('filterResult').value='all';
+  document.getElementById('filterDate').value='';
+  document.getElementById('filterSearch').value='';
+  renderTable();
+}
+['filterResult','filterDate','filterSearch'].forEach(id=>
+  document.getElementById(id).addEventListener('input',renderTable));
+
+// ── SHARE / COPY FOR CHAT ─────────────────────────────────────────────────────
+const COPY_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+
+function buildMessage() {
+  const filtered=getFiltered();
+  if (!filtered.length) return null;
+  const s=computeStats();
+  const now=new Date().toLocaleDateString('pt-PT');
+  const lines=[
+    '\uD83C\uDFC0 *JEREMIAS TRADES* \u2014 ' + now,
+    '\uD83D\uDCB0 Bankroll: \u20AC' + s.bankroll.toFixed(2) + ' | Peak: \u20AC' + s.peak.toFixed(2),
+    '\uD83D\uDCCA W/L: ' + s.won.length + 'W / ' + s.lost.length + 'L' + (s.pending.length?' / ' + s.pending.length + '\u23F3':'') + ' | ROI: ' + (s.roi!==null?s.roi+'%':'\u2014'),
+    ''
+  ];
+  const pending=filtered.filter(b=>!b.result);
+  const settled=filtered.filter(b=>b.result);
+  function matchLine(b) {
+    const pts=b.match.split(' vs ');
+    const t1=getTeamInfo(pts[0]||''), t2=getTeamInfo(pts[1]||'');
+    return '\uD83C\uDFE0 ' + t1.short + ' (' + t1.abbr + ') vs \u2708\uFE0F ' + t2.short + ' (' + t2.abbr + ')';
+  }
+  if (pending.length) {
+    lines.push('\u23F3 *PENDING BETS (' + pending.length + ')*');
+    pending.forEach(b=>{
+      lines.push('\u2022 ' + matchLine(b));
+      lines.push('  Pick: ' + b.pick + ' @ ' + b.odds + ' | Stake: \u20AC' + b.stake.toFixed(2) + ' | Potential: \u20AC' + b.potential_return.toFixed(2));
+      if (b.confidence!=null||b.reasoning) {
+        const conf=b.confidence!=null?'\uD83C\uDFAF ' + b.confidence + '/100 ' + confLabel(b.confidence):'';
+        const just=b.reasoning?'because: '+b.reasoning:'';
+        lines.push('  ' + conf + (conf&&just?' \u2014 ':'') + just);
+      }
+    });
+    lines.push('');
+  }
+  if (settled.length) {
+    lines.push('\uD83D\uDCCB *SETTLED BETS (' + settled.length + ')*');
+    settled.forEach(b=>{
+      const icon=b.result==='WON'?'\u2705':'\u274C';
+      const pnl=b.pnl!==null?(b.pnl>=0?'+\u20AC'+b.pnl.toFixed(2):'-\u20AC'+Math.abs(b.pnl).toFixed(2)):'';
+      lines.push(icon + ' ' + matchLine(b) + ' \u2014 ' + b.pick + ' @ ' + b.odds + ' ' + pnl);
+      if (b.confidence!=null||b.reasoning) {
+        const conf=b.confidence!=null?'\uD83C\uDFAF ' + b.confidence + '/100 ' + confLabel(b.confidence):'';
+        const just=b.reasoning?b.reasoning:'';
+        lines.push('  ' + conf + (conf&&just?' \u2014 ':'') + just);
+      }
+    });
+    lines.push('');
+  }
+  lines.push('_simulation only \u2014 no real money \uD83C\uDFAE_');
+  return lines.join('\n');
+}
+
+function shareToWhatsApp() {
+  const text=buildMessage();
+  if (!text){showToast('No bets to share!');return;}
+  const a=document.createElement('a');
+  a.href='https://wa.me/?text='+encodeURIComponent(text);
+  a.target='_blank'; a.rel='noopener noreferrer';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  const btn=document.getElementById('btnWA');
+  btn.classList.add('copied');
+  showToast('\uD83D\uDCF2 WhatsApp opened \u2014 pick your contact!');
+  setTimeout(()=>btn.classList.remove('copied'),2500);
+}
+
+function copyForChat() {
+  const text=buildMessage();
+  if (!text){showToast('No bets to share!');return;}
+  const btn=document.getElementById('btnCopyChat');
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.innerHTML=COPY_SVG+' Copied!'; btn.classList.add('copied');
+    showToast('\uD83D\uDCCB Copied to clipboard!');
+    setTimeout(()=>{ btn.innerHTML=COPY_SVG+' Copy'; btn.classList.remove('copied'); },2500);
+  }).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=text; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    btn.innerHTML=COPY_SVG+' Copied!'; btn.classList.add('copied');
+    showToast('\uD83D\uDCCB Copied to clipboard!');
+    setTimeout(()=>{ btn.innerHTML=COPY_SVG+' Copy'; btn.classList.remove('copied'); },2500);
+  });
+}
+function showToast(msg) {
+  const t=document.getElementById('copyToast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid=setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+buildTicker();
+renderTabs();
+renderStats();
+renderChart();
+renderAnalytics();
+renderDraftPicks();
+renderTable();
+</script>
+</body>
+</html>
