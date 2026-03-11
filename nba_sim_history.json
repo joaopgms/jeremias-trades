@@ -7,11 +7,11 @@
       "session": 1,
       "start_date": "2026-03-08",
       "end_date": null,
-      "peak_bankroll": 1747.25,
+      "peak_bankroll": 2342.25,
       "final_bankroll": null,
       "net_pnl": null,
       "total_bets": 9,
-      "wins": 5,
+      "wins": 8,
       "losses": 1
     }
   ],
@@ -156,10 +156,10 @@
           "reasoning": "Spurs are 47-17, best record in the NBA — won 15 of last 16, 12-4 ATS in last 16 games. Celtics missing Vucevic (OUT, finger surgery) and Tatum limited to ~27-min restriction (only 3rd game back from Achilles tear). Victor Wembanyama dominant at home — Spurs just demolished Houston 145-120. Depleted Celtics frontcourt vs Wembanyama spells trouble covering the spread. Spurs home court (Frost Bank Center) — commanding 33-6 home record this season.",
           "confidence": 68,
           "anchor_players": ["Victor Wembanyama"],
-          "result": null,
-          "returned": null,
-          "pnl": null,
-          "settled_at": null
+          "result": "WON",
+          "returned": 567.00,
+          "pnl": 252.00,
+          "settled_at": "2026-03-11T14:00:00"
         },
         {
           "id": "nba_bet_20260310_002",
@@ -172,10 +172,10 @@
           "reasoning": "LeBron James confirmed OUT for 3rd straight game (left foot arthritis + hip contusion). Luka Doncic (32.5 ppg, #1 scorer in NBA) at home on NBC primetime — capable of carrying the Lakers on a big-stage night. Lakers home court at Crypto.com Arena — crowd factor in a marquee TV game. Market prices Lakers at ~49% implied probability (2.05); marginal value given Luka's ceiling at home.",
           "confidence": 47,
           "anchor_players": ["Luka Doncic"],
-          "result": null,
-          "returned": null,
-          "pnl": null,
-          "settled_at": null
+          "result": "WON",
+          "returned": 358.75,
+          "pnl": 183.75,
+          "settled_at": "2026-03-11T14:00:00"
         },
         {
           "id": "nba_bet_20260310_003",
@@ -188,13 +188,13 @@
           "reasoning": "Warriors are on the second leg of a back-to-back (played Jazz in Utah on Monday, 32+ min from key players). Draymond Green listed as QUESTIONABLE (injury management, lower back). Bulls arrive rested and already acclimated to the West Coast. Line has barely moved suggesting market is not fully pricing in Warriors fatigue. Getting +6.5 on a rested team against a fatigued, depleted opponent is sharp value.",
           "confidence": 55,
           "anchor_players": [],
-          "result": null,
-          "returned": null,
-          "pnl": null,
-          "settled_at": null
+          "result": "WON",
+          "returned": 334.25,
+          "pnl": 159.25,
+          "settled_at": "2026-03-11T14:00:00"
         }
       ],
-      "summary": "Day 3 commit — 3 picks totalling €665 (38% of bankroll). 2 from 14:00 draft (Spurs -3.5, Lakers ML) + 1 new late pick (Bulls +6.5 off Warriors back-to-back). No cancellations. Bankroll: €1,747.25 → €1,082.25. Potential return if all win: +€1,260.00."
+      "summary": "Day 3 settle (11 Mar) — SAS ✅ -3.5 WON (125-116, Wemby 39 pts/11 reb/8 3PT, margin +9), LAL ✅ ML WON (120-106, Luka 31/11/11 triple-double, Reaves 31 pts), CHI ✅ +6.5 WON (Bulls 130-124 OT, Buzelis career-high 41 pts). Day 3 net P&L: +€595.00. Total P&L: +€1,342.25. New peak: €2,342.25."
     }
   ]
 }
