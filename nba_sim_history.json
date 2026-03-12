@@ -10,9 +10,9 @@
       "peak_bankroll": 2342.25,
       "final_bankroll": null,
       "net_pnl": null,
-      "total_bets": 9,
-      "wins": 8,
-      "losses": 1
+      "total_bets": 11,
+      "wins": 9,
+      "losses": 2
     }
   ],
   "entries": [
@@ -33,7 +33,7 @@
           "odds": 1.98,
           "stake": 150.0,
           "potential_return": 297.0,
-          "reasoning": "Heat near even money at 1.98 vs Pistons \u2014 historically resilient franchise under Spoelstra; competitive matchup for both teams fighting for playoff position",
+          "reasoning": "Heat near even money at 1.98 vs Pistons — historically resilient franchise under Spoelstra; competitive matchup for both teams fighting for playoff position",
           "confidence": 65,
           "anchor_players": [],
           "result": "WON",
@@ -77,7 +77,7 @@
           "settled_at": "2026-03-09T14:00:00"
         }
       ],
-      "summary": "Opening bets \u2014 3 picks totalling \u20ac400. ALL 3 WON! Heat 121-110 Pistons, Kings 126-110 Bulls, Suns 111-99 Hornets. Net P&L: +\u20ac439. Bankroll: \u20ac1000 \u2192 \u20ac1439."
+      "summary": "Opening bets — 3 picks totalling €400. ALL 3 WON! Heat 121-110 Pistons, Kings 126-110 Bulls, Suns 111-99 Hornets. Net P&L: +€439. Bankroll: €1000 → €1439."
     },
     {
       "entry_id": "nba_entry_20260309",
@@ -96,7 +96,7 @@
           "odds": 1.91,
           "stake": 360.0,
           "potential_return": 687.6,
-          "reasoning": "76ers are catastrophically undermanned: Embiid OUT (oblique), Paul George OUT (suspension), Maxey OUT (finger) \u2014 their top 3 players all absent. Cavaliers have Mitchell back from injury and are at near full strength. Home court advantage. Spread opened at -10.5, moved to -12.5 on injury news. At 1.91 for -12.5, market still offers good value for a decimated opponent.",
+          "reasoning": "76ers are catastrophically undermanned: Embiid OUT (oblique), Paul George OUT (suspension), Maxey OUT (finger) — their top 3 players all absent. Cavaliers have Mitchell back from injury and are at near full strength. Home court advantage. Spread opened at -10.5, moved to -12.5 on injury news. At 1.91 for -12.5, market still offers good value for a decimated opponent.",
           "confidence": 80,
           "anchor_players": [
             "Donovan Mitchell"
@@ -133,7 +133,7 @@
           "odds": 1.75,
           "stake": 215.0,
           "potential_return": 376.25,
-          "reasoning": "Michael Porter Jr. confirmed OUT for the Nets (their leading scorer). Grizzlies are the more complete team even without Ja Morant \u2014 better depth, better coaching, better defensive intensity. Nets sitting near bottom of East with no playoff ambition \u2014 potential tanking risk. Value at 1.75 for the superior roster.",
+          "reasoning": "Michael Porter Jr. confirmed OUT for the Nets (their leading scorer). Grizzlies are the more complete team even without Ja Morant — better depth, better coaching, better defensive intensity. Nets sitting near bottom of East with no playoff ambition — potential tanking risk. Value at 1.75 for the superior roster.",
           "confidence": 64,
           "anchor_players": [],
           "result": "LOST",
@@ -142,7 +142,7 @@
           "settled_at": "2026-03-10T14:00:00"
         }
       ],
-      "summary": "Day 2 settle \u2014 CLE \u2705 covered -12.5 (115-101, margin +14), DEN \u2705 covered +7.5 (OKC 129-126, lost by only 3), MEM \u274c ML LOST (BKN 126-115, Nets bench explosion). Day 2 net P&L: +\u20ac308.25. Total P&L: +\u20ac747.25. Bankroll: \u20ac649 \u2192 \u20ac1,747.25."
+      "summary": "Day 2 settle — CLE ✅ covered -12.5 (115-101, margin +14), DEN ✅ covered +7.5 (OKC 129-126, lost by only 3), MEM ❌ ML LOST (BKN 126-115, Nets bench explosion). Day 2 net P&L: +€308.25. Total P&L: +€747.25. Bankroll: €649 → €1,747.25."
     },
     {
       "entry_id": "nba_entry_20260310",
@@ -161,7 +161,7 @@
           "odds": 1.8,
           "stake": 315.0,
           "potential_return": 567.0,
-          "reasoning": "Spurs are 47-17, best record in the NBA \u2014 won 15 of last 16, 12-4 ATS in last 16 games. Celtics missing Vucevic (OUT, finger surgery) and Tatum limited to ~27-min restriction (only 3rd game back from Achilles tear). Victor Wembanyama dominant at home \u2014 Spurs just demolished Houston 145-120. Depleted Celtics frontcourt vs Wembanyama spells trouble covering the spread. Spurs home court (Frost Bank Center) \u2014 commanding 33-6 home record this season.",
+          "reasoning": "Spurs are 47-17, best record in the NBA — won 15 of last 16, 12-4 ATS in last 16 games. Celtics missing Vucevic (OUT, finger surgery) and Tatum limited to ~27-min restriction (only 3rd game back from Achilles tear). Victor Wembanyama dominant at home — Spurs just demolished Houston 145-120. Depleted Celtics frontcourt vs Wembanyama spells trouble covering the spread. Spurs home court (Frost Bank Center) — commanding 33-6 home record this season.",
           "confidence": 68,
           "anchor_players": [
             "Victor Wembanyama"
@@ -179,7 +179,7 @@
           "odds": 2.05,
           "stake": 175.0,
           "potential_return": 358.75,
-          "reasoning": "LeBron James confirmed OUT for 3rd straight game (left foot arthritis + hip contusion). Luka Doncic (32.5 ppg, #1 scorer in NBA) at home on NBC primetime \u2014 capable of carrying the Lakers on a big-stage night. Lakers home court at Crypto.com Arena \u2014 crowd factor in a marquee TV game. Market prices Lakers at ~49% implied probability (2.05); marginal value given Luka's ceiling at home.",
+          "reasoning": "LeBron James confirmed OUT for 3rd straight game (left foot arthritis + hip contusion). Luka Doncic (32.5 ppg, #1 scorer in NBA) at home on NBC primetime — capable of carrying the Lakers on a big-stage night. Lakers home court at Crypto.com Arena — crowd factor in a marquee TV game. Market prices Lakers at ~49% implied probability (2.05); marginal value given Luka's ceiling at home.",
           "confidence": 47,
           "anchor_players": [
             "Luka Doncic"
@@ -206,7 +206,7 @@
           "settled_at": "2026-03-11T14:00:00"
         }
       ],
-      "summary": "Day 3 settle (11 Mar) \u2014 SAS \u2705 -3.5 WON (125-116, Wemby 39 pts/11 reb/8 3PT, margin +9), LAL \u2705 ML WON (120-106, Luka 31/11/11 triple-double, Reaves 31 pts), CHI \u2705 +6.5 WON (Bulls 130-124 OT, Buzelis career-high 41 pts). Day 3 net P&L: +\u20ac595.00. Total P&L: +\u20ac1,342.25. New peak: \u20ac2,342.25."
+      "summary": "Day 3 settle (11 Mar) — SAS ✅ -3.5 WON (125-116, Wemby 39 pts/11 reb/8 3PT, margin +9), LAL ✅ ML WON (120-106, Luka 31/11/11 triple-double, Reaves 31 pts), CHI ✅ +6.5 WON (Bulls 130-124 OT, Buzelis career-high 41 pts). Day 3 net P&L: +€595.00. Total P&L: +€1,342.25. New peak: €2,342.25."
     },
     {
       "entry_id": "nba_entry_20260312",
@@ -235,15 +235,15 @@
           "odds": 1.74,
           "stake": 350.0,
           "potential_return": 609.0,
-          "reasoning": "Timberwolves on second night of back-to-back \u2014 lost to Lakers 106-120 on March 10; Anthony Edwards shot 2-for-15 (14 pts), heavy fatigue carry-over. Clippers at home (Intuit Dome) on three-game home winning streak. Kawhi Leonard averaging 27.9 ppg. Road B2B historically depresses winning %. Odds improved from 1.70 to 1.74 at commit \u2014 good sign. T-wolves 40-25 but road B2B is real handicap.",
+          "reasoning": "Timberwolves on second night of back-to-back — lost to Lakers 106-120 on March 10; Anthony Edwards shot 2-for-15 (14 pts), heavy fatigue carry-over. Clippers at home (Intuit Dome) on three-game home winning streak. Kawhi Leonard averaging 27.9 ppg. Road B2B historically depresses winning %. Odds improved from 1.70 to 1.74 at commit — good sign. T-wolves 40-25 but road B2B is real handicap.",
           "confidence": 58,
           "anchor_players": [],
           "drafted_at": "2026-03-11T14:00:00",
           "committed_at": "2026-03-12T22:30:00",
-          "result": null,
-          "returned": null,
-          "pnl": null,
-          "settled_at": null
+          "result": "WON",
+          "returned": 609.0,
+          "pnl": 259.0,
+          "settled_at": "2026-03-13T14:00:00"
         },
         {
           "id": "nba_bet_20260312_002",
@@ -253,18 +253,18 @@
           "odds": 1.76,
           "stake": 375.0,
           "potential_return": 660.0,
-          "reasoning": "Late scout flip: Raptors are 36-28 (5th East, playoff team) vs Pelicans 21-45 (tanking). Road team favoured at -132 (1.76 decimal) because Raptors have the 4th-best road record in the NBA at 19-11. Pelicans allow 120.2 OPPG (27th in league). Original 14:00 pick of Pelicans ML was an error \u2014 line moved >0.22 against that pick, market correctly repriced. Poeltl questionable for Raptors is minor risk but talent/record gap is too large to bet the Pelicans. Value at 1.76 for a playoff team on road.",
+          "reasoning": "Late scout flip: Raptors are 36-28 (5th East, playoff team) vs Pelicans 21-45 (tanking). Road team favoured at -132 (1.76 decimal) because Raptors have the 4th-best road record in the NBA at 19-11. Pelicans allow 120.2 OPPG (27th in league). Original 14:00 pick of Pelicans ML was an error — line moved >0.22 against that pick, market correctly repriced. Poeltl questionable for Raptors is minor risk but talent/record gap is too large to bet the Pelicans. Value at 1.76 for a playoff team on road.",
           "confidence": 62,
           "anchor_players": [],
           "drafted_at": "2026-03-12T22:30:00",
           "committed_at": "2026-03-12T22:30:00",
-          "result": null,
-          "returned": null,
-          "pnl": null,
-          "settled_at": null
+          "result": "LOST",
+          "returned": 0,
+          "pnl": -375.0,
+          "settled_at": "2026-03-13T14:00:00"
         }
       ],
-      "summary": "Day 5 commit (odds-verified) \u2014 2 bets totalling \u20ac725. CANCELLED: NOP ML (line moved >0.22, Pelicans 21-45 vs Raptors 36-28, scout error at 14:00). COMMITTED: LAC ML @ 1.74 (odds improved, T-wolves B2B) + TOR ML @ 1.76 (late scout flip \u2014 playoff Raptors road favs vs tanking Pelicans, 19-11 away record). Bankroll: \u20ac2342.25 \u2192 \u20ac1617.25."
+      "summary": "Day 5 settle (13 Mar) — LAC ✅ ML WON (Clippers 153-128, Kawhi 45pts/Mathurin 22/Garland 21, historic performance), TOR ❌ ML LOST (NOP 122-111, Pelicans energised — Murphy 28/Murray 27/Zion 19). Day net P&L: +€259−€375 = −€116. Cumulative P&L: +€1,226.25. Bankroll: €2,342.25 → €2,226.25."
     }
   ]
 }
