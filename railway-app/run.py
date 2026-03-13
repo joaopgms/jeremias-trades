@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 
 import anthropic
 from duckduckgo_search import DDGS
-from github import Github, Auth, GithubException
+from github import Github, GithubException
 
 
 def _load_env_file(path: str) -> None:
@@ -35,7 +35,7 @@ def _load_env_file(path: str) -> None:
             if key and key not in os.environ:
                 os.environ[key] = value
 
-# Load .env (local) then fallback to .env.example for local testing convenience
+# Load local .env and fallback to .env.example for local testing
 _load_env_file(Path(__file__).parent / ".env")
 _load_env_file(Path(__file__).parent / ".env.example")
 
@@ -49,7 +49,7 @@ MODEL             = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-5")
 if not ANTHROPIC_API_KEY or not GITHUB_TOKEN or not GITHUB_REPO:
     missing = [k for k in ["ANTHROPIC_API_KEY", "GITHUB_TOKEN", "GITHUB_REPO"] if not os.environ.get(k)]
     print("ERROR: Missing required environment variables:", ", ".join(missing))
-    print("Please set them in Railway environment variables or local .env")
+    print("Set them in Railway environment variables or local .env")
     sys.exit(1)
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -96,8 +96,7 @@ def web_search(query: str) -> str:
 # ── GitHub Helpers ────────────────────────────────────────────────────────────
 
 def get_repo():
-    g = Github(auth=Auth.Token(GITHUB_TOKEN))
-    return g.get_repo(GITHUB_REPO)
+    return Github(GITHUB_TOKEN).get_repo(GITHUB_REPO)
 
 
 def read_github_file(repo, path: str) -> str | None:
@@ -144,7 +143,6 @@ def run_agent(system: str, messages: list) -> str:
                 messages=messages,
             )
         except anthropic.BadRequestError as e:
-            # Catch 400 errors (e.g., low credit balance)
             error_info = str(e)
             print(f"⚠️ Anthropic API error: {error_info}")
             return f"[Anthropic Error: {error_info}]"
