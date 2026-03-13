@@ -196,7 +196,38 @@ def generate_data_js(history_json: str, draft_picks: list, scout_model_output: s
     )
 
 
-# ── Phase Runner ──────────────────────────────────────────────────────────────
+def sanitize_error_text(err: str) -> str:
+    if not err:
+        return ""
+    text = str(err).strip()
+    # Remove excessive newlines and whitespace
+    text = " ".join(line.strip() for line in text.splitlines() if line.strip())
+    # If JSON-like string, extract the most likely message field
+    try:
+        parsed = json.loads(text)
+        if isinstance(parsed, dict):
+            if parsed.get("message"):
+                return str(parsed["message"]).strip()
+            if parsed.get("error") and isinstance(parsed["error"], dict):
+                if parsed["error"].get("message"):
+                    return str(parsed["error"]["message"]).strip()
+            if parsed.get("error") and isinstance(parsed["error"], str):
+                return parsed["error"].strip()
+    except Exception:
+        pass
+
+    # Normalize common embedded messages
+    for pat in [r"Your credit balance is too low.*", r"Missing <updated_state> or <updated_history> tags.*", r"Invalid JSON in Claude output: .*"]:
+        m = re.search(pat, text, flags=re.IGNORECASE)
+        if m:
+            return m.group(0).strip()
+
+    # fallback: if there is a quoted message text, return that
+    m = re.search(r"['\"](Your .*? error.*?|.*? message.*?)[\"']", text)
+    if m:
+        return m.group(1).strip()
+
+    return text
 
 def run_phase(phase: str) -> None:
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -249,7 +280,7 @@ Use web_search for all research. Output the updated files using the XML tags at 
 
         state_obj = json.loads(state_json)
         state_obj["scout_model_output"] = "Scout output unavailable due model error."
-        state_obj["scout_error"] = "Missing <updated_state> or <updated_history> tags in Claude output."
+        state_obj["scout_error"] = sanitize_error_text("Missing <updated_state> or <updated_history> tags in Claude output.")
         state_obj["scout_status"] = "unavailable"
         state_obj["scout_updated_at"] = datetime.now(timezone.utc).isoformat()
         state_obj["last_report"] = report
@@ -280,7 +311,7 @@ Use web_search for all research. Output the updated files using the XML tags at 
         print(f"ERROR: Invalid JSON in Claude's output: {e}")
         state_obj = json.loads(state_json)
         state_obj["scout_model_output"] = "Scout output unavailable due invalid JSON from model."
-        state_obj["scout_error"] = f"Invalid JSON in Claude output: {e}"
+        state_obj["scout_error"] = sanitize_error_text(f"Invalid JSON in Claude output: {e}")
         state_obj["scout_status"] = "unavailable"
         state_obj["scout_updated_at"] = datetime.now(timezone.utc).isoformat()
         state_obj["last_report"] = report
