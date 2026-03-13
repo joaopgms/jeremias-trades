@@ -18,7 +18,8 @@ from datetime import datetime, timezone
 
 import anthropic
 from duckduckgo_search import DDGS
-from github import Github, GithubException
+import github
+from github import GithubException
 
 
 def _load_env_file(path: str) -> None:
@@ -96,7 +97,7 @@ def web_search(query: str) -> str:
 # ── GitHub Helpers ────────────────────────────────────────────────────────────
 
 def get_repo():
-    return Github(GITHUB_TOKEN).get_repo(GITHUB_REPO)
+    return github.Github(auth=github.Auth.Token(GITHUB_TOKEN)).get_repo(GITHUB_REPO)
 
 
 def read_github_file(repo, path: str) -> str | None:
