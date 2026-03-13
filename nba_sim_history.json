@@ -10,7 +10,7 @@
       "peak_bankroll": 2342.25,
       "final_bankroll": null,
       "net_pnl": null,
-      "total_bets": 11,
+      "total_bets": 13,
       "wins": 9,
       "losses": 2
     }
@@ -265,6 +265,58 @@
         }
       ],
       "summary": "Day 5 settle (13 Mar) — LAC ✅ ML WON (Clippers 153-128, Kawhi 45pts/Mathurin 22/Garland 21, historic performance), TOR ❌ ML LOST (NOP 122-111, Pelicans energised — Murphy 28/Murray 27/Zion 19). Day net P&L: +€259−€375 = −€116. Cumulative P&L: +€1,226.25. Bankroll: €2,342.25 → €2,226.25."
+    },
+    {
+      "entry_id": "nba_entry_20260313",
+      "session": 1,
+      "timestamp": "2026-03-13T22:30:00",
+      "type": "bets_placed",
+      "bankroll_before": 2226.25,
+      "total_staked": 780.0,
+      "bankroll_after": 1446.25,
+      "cancelled_picks": [
+        {
+          "id": "nba_draft_20260312_001",
+          "match": "Detroit Pistons vs Philadelphia 76ers",
+          "pick": "Detroit Pistons -14.5",
+          "odds_drafted": 1.80,
+          "odds_at_commit": 1.75,
+          "reason": "Game already AO VIVO (in progress) at commit time — pre-game betting window closed. Spread also widened from -14.5 to -17.5, confirming that further PHI injury news was absorbed by the line (Adem Bona OUT added, Andre Drummond QUESTIONABLE). Cannot commit pre-game spread bet to a live contest."
+        }
+      ],
+      "bets": [
+        {
+          "id": "nba_bet_20260313_001",
+          "match": "San Antonio Spurs vs Denver Nuggets",
+          "time": "01:00",
+          "pick": "Denver Nuggets ML",
+          "odds": 2.50,
+          "stake": 445.0,
+          "potential_return": 1112.50,
+          "confidence": 65,
+          "anchor_players": ["Nikola Jokic", "Jamal Murray"],
+          "result": null,
+          "returned": null,
+          "pnl": null,
+          "settled_at": null
+        },
+        {
+          "id": "nba_bet_20260313_002",
+          "match": "Oklahoma City Thunder vs Boston Celtics",
+          "time": "01:30",
+          "pick": "Oklahoma City Thunder -7.5",
+          "odds": 1.78,
+          "stake": 335.0,
+          "potential_return": 596.30,
+          "confidence": 62,
+          "anchor_players": ["Chet Holmgren"],
+          "result": null,
+          "returned": null,
+          "pnl": null,
+          "settled_at": null
+        }
+      ],
+      "summary": "Day 6 commit (13 Mar) — Draft pick DET -14.5 CANCELLED (game live at commit time, spread widened to -17.5). 2 late-scout picks totalling €780: DEN ML @ 2.50 (Wemby QUESTIONABLE/50-50, Jokic healthy) + OKC -7.5 @ 1.78 (Tatum OUT, Vucevic OUT for Boston). Bankroll: €2,226.25 → €1,446.25. Results at 14:00 tomorrow."
     }
   ]
 }
