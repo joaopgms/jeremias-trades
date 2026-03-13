@@ -18,14 +18,39 @@ from datetime import datetime, timezone
 
 import anthropic
 from duckduckgo_search import DDGS
-from github import Github, Auth, GithubException
+from github import Github, GithubException
 
-# ── Config ────────────────────────────────────────────────────────────────────
 
-ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
-GITHUB_TOKEN      = os.environ["GITHUB_TOKEN"]
-GITHUB_REPO       = os.environ["GITHUB_REPO"]   # e.g. "joaopgms/betaGOD"
+def _load_env_file(path: str) -> None:
+    if not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+
+# Load local .env and fallback to .env.example for local testing
+_load_env_file(Path(__file__).parent / ".env")
+_load_env_file(Path(__file__).parent / ".env.example")
+
+# ── Config ───────────────────────────────────────────────────────────────────
+
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY")
+GITHUB_TOKEN      = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPO       = os.environ.get("GITHUB_REPO")   # e.g. "joaopgms/betaGOD"
 MODEL             = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-5")
+
+if not ANTHROPIC_API_KEY or not GITHUB_TOKEN or not GITHUB_REPO:
+    missing = [k for k in ["ANTHROPIC_API_KEY", "GITHUB_TOKEN", "GITHUB_REPO"] if not os.environ.get(k)]
+    print("ERROR: Missing required environment variables:", ", ".join(missing))
+    print("Set them in Railway environment variables or local .env")
+    sys.exit(1)
 
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
@@ -71,8 +96,7 @@ def web_search(query: str) -> str:
 # ── GitHub Helpers ────────────────────────────────────────────────────────────
 
 def get_repo():
-    g = Github(auth=Auth.Token(GITHUB_TOKEN))
-    return g.get_repo(GITHUB_REPO)
+    return Github(GITHUB_TOKEN).get_repo(GITHUB_REPO)
 
 
 def read_github_file(repo, path: str) -> str | None:
@@ -107,16 +131,21 @@ def handle_tool_call(name: str, inputs: dict) -> str:
 def run_agent(system: str, messages: list) -> str:
     """
     Run Claude in a tool-use loop until end_turn.
-    Returns the final assistant text response.
+    Returns the final assistant text response, or an error message if Anthropic fails.
     """
     while True:
-        response = client.messages.create(
-            model=MODEL,
-            max_tokens=16000,
-            system=system,
-            tools=TOOLS,
-            messages=messages,
-        )
+        try:
+            response = client.messages.create(
+                model=MODEL,
+                max_tokens=16000,
+                system=system,
+                tools=TOOLS,
+                messages=messages,
+            )
+        except anthropic.BadRequestError as e:
+            error_info = str(e)
+            print(f"⚠️ Anthropic API error: {error_info}")
+            return f"[Anthropic Error: {error_info}]"
 
         messages.append({"role": "assistant", "content": response.content})
 
