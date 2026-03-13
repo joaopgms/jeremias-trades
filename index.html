@@ -446,6 +446,47 @@
       font-size: 0.75rem;
     }
 
+    .scout-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .scout-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+
+    .scout-dot.online {
+      background: #16a34a;
+      box-shadow: 0 0 6px rgba(22, 163, 74, 0.35);
+    }
+
+    .scout-dot.offline {
+      background: #dc2626;
+      box-shadow: 0 0 6px rgba(220, 38, 38, 0.35);
+    }
+
+    .scout-pill.online {
+      background: #ecfdf3;
+      border-color: #bbf7d0;
+      color: #166534;
+    }
+
+    .scout-pill.offline {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+
     /* ── CHART ── */
     .chart-section {
       margin: 16px 32px 0;
@@ -1484,8 +1525,10 @@
         <div class="scout-card-subtitle">From the last run (scout/commit)</div>
         <div id="scoutStatusLine" style="font-size:0.72rem;margin-top:3px;color:var(--muted)">Loading status...</div>
       </div>
-      <div id="scoutStatus"
-        style="font-size:0.70rem;font-weight:700;padding:4px 10px;border-radius:999px;background:#f0f0f0;color:#333;">—
+      <div id="scoutStatus" class="scout-status-pill"
+        style="font-size:0.70rem;font-weight:700;padding:4px 10px;border-radius:999px;background:#f0f0f0;color:#333;">
+        <span id="scoutStatusDot" class="scout-dot offline"></span>
+        <span id="scoutStatusText">Agent Status</span>
       </div>
     </div>
     <div class="scout-card-body">
@@ -2021,17 +2064,19 @@
       modelEl.textContent = output || 'No scout model output available yet.';
       const humanDate = updatedAt ? new Date(updatedAt).toLocaleString() : 'unknown';
 
+      const dot = document.getElementById('scoutStatusDot');
+      const textEl = document.getElementById('scoutStatusText');
       if (status.toLowerCase() === 'live') {
-        statusEl.textContent = '✅ Agent Live';
-        statusEl.style.background = '#e6f8f0';
-        statusEl.style.color = '#0f766e';
-        statusLineEl.textContent = `Last run: ${humanDate} · Agent is live.`;
+        statusEl.className = 'scout-status-pill online';
+        dot.className = 'scout-dot online';
+        textEl.textContent = 'Online';
+        statusLineEl.textContent = `Last run: ${humanDate} · Agent is online.`;
         errorEl.style.display = 'none';
       } else {
-        statusEl.textContent = '⛔ Agent Unavailable';
-        statusEl.style.background = '#ffe9e9';
-        statusEl.style.color = '#c03838';
-        statusLineEl.textContent = `Last run: ${humanDate} · Agent unavailable on last run.`;
+        statusEl.className = 'scout-status-pill offline';
+        dot.className = 'scout-dot offline';
+        textEl.textContent = 'Offline';
+        statusLineEl.textContent = `Last run: ${humanDate} · Agent offline.`;
         if (err) {
           errorEl.style.display = 'block';
           errorEl.textContent = '⚠️ ' + err;
