@@ -117,6 +117,14 @@ header { background: var(--card); border-bottom: 1px solid var(--border); box-sh
 .sc-cyan  .score-value { color: var(--cyan); }
 .score-sub { font-size: 0.68rem; color: var(--muted); margin-top: 5px; }
 
+.scout-card { margin: 16px 32px 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--shadow); }
+.scout-card-header { padding: 12px 18px; border-bottom: 1px solid var(--border2); display: flex; justify-content: space-between; align-items: center; }
+.scout-card-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--burg); }
+.scout-card-subtitle { margin-top: 2px; font-size: 0.66rem; color: var(--muted); }
+.scout-card-body { padding: 14px 18px; font-size: 0.75rem; line-height: 1.45; color: var(--text); }
+.scout-card-body pre { margin: 0; white-space: pre-wrap; word-break: break-word; max-height: 160px; overflow: auto; border: 1px solid var(--border2); border-radius: var(--r-sm); background: #f7f3ec; padding: 10px; }
+.scout-card-error { margin-top: 10px; border: 1px solid #ffb6b6; border-radius: var(--r-sm); background: #fff4f4; color: #7f1d1d; padding: 10px; max-height: 100px; overflow: auto; font-size: 0.75rem; }
+
 /* ── CHART ── */
 .chart-section { margin: 16px 32px 0; background: var(--card); border: 1px solid var(--border);
   border-radius: var(--r); box-shadow: var(--shadow); }
@@ -391,6 +399,20 @@ td { padding: 13px 14px; font-size: 0.83rem; vertical-align: middle; }
   </div>
 </div>
 
+<div class="scout-card">
+  <div class="scout-card-header">
+    <div>
+      <div class="scout-card-title">🧠 Latest Scouting Model Output</div>
+      <div class="scout-card-subtitle">From the last run (scout/commit)</div>
+    </div>
+    <div style="font-size:0.68rem;color:var(--muted);font-weight:700" id="scoutStatus">Loaded</div>
+  </div>
+  <div class="scout-card-body">
+    <pre id="scoutModelOutput">No scout output available yet.</pre>
+    <div id="scoutErrorOutput" class="scout-card-error" style="display:none"></div>
+  </div>
+</div>
+
 <!-- CHART -->
 <div class="chart-section">
   <div class="section-header">
@@ -556,7 +578,7 @@ function renderTabs() {
 }
 function switchSession(n) {
   activeSession = n;
-  renderTabs(); renderStats(); renderChart(); renderAnalytics(); renderDraftPicks(); renderTable();
+  renderTabs(); renderStats(); renderChart(); renderAnalytics(); renderDraftPicks(); renderScoutModelCard(); renderTable();
 }
 
 // ── STATS ─────────────────────────────────────────────────────────────────────
@@ -867,6 +889,26 @@ function renderDraftPicks() {
       <div class="draft-reasoning">${p.reasoning||''}</div>
     </div>`;
   }).join('');
+}
+
+function renderScoutModelCard() {
+  const output = typeof SCOUT_MODEL_OUTPUT !== 'undefined' ? SCOUT_MODEL_OUTPUT : '';
+  const err = typeof SCOUT_ERROR !== 'undefined' ? SCOUT_ERROR : '';
+  const modelEl = document.getElementById('scoutModelOutput');
+  const errorEl = document.getElementById('scoutErrorOutput');
+  const statusEl = document.getElementById('scoutStatus');
+
+  modelEl.textContent = output || 'No scout model output available yet.';
+  if (err) {
+    errorEl.style.display = 'block';
+    errorEl.textContent = '⚠️ Error: ' + err;
+    statusEl.textContent = 'Error';
+    statusEl.style.color = '#c0392b';
+  } else {
+    errorEl.style.display = 'none';
+    statusEl.textContent = output ? 'Ready' : 'No output';
+    statusEl.style.color = output ? '#0f766e' : '#7a6e65';
+  }
 }
 
 // ── TABLE ─────────────────────────────────────────────────────────────────────
@@ -1188,6 +1230,7 @@ renderStats();
 renderChart();
 renderAnalytics();
 renderDraftPicks();
+renderScoutModelCard();
 renderTable();
 </script>
 </body>
