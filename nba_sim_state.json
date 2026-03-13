@@ -269,9 +269,9 @@
       "settled_at": "2026-03-13T14:00:00"
     }
   ],
-  "scout_model_output": "[Anthropic Error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZ1vRtAAEE6RC7jbtsx67'}]",
+  "scout_model_output": "[Anthropic Error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CZ1vRyE1eTqEDz6TXzCU5'}]",
   "scout_error": "Missing <updated_state> or <updated_history> tags in Claude output.",
   "last_report": "No report generated.",
   "scout_status": "unavailable",
-  "scout_updated_at": "2026-03-13T23:09:18.768072+00:00"
+  "scout_updated_at": "2026-03-13T23:09:20.009406+00:00"
 }
