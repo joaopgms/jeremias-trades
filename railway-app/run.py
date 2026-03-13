@@ -269,7 +269,8 @@ Use web_search for all research. Output the updated files using the XML tags at 
         commit_msg = f"NBA sim {phase} error: {today}"
         write_github_file(repo, "nba_sim_state.json", updated_state, commit_msg)
         write_github_file(repo, "data.js", data_js, commit_msg)
-        sys.exit(1)
+        print("✅ Error state committed. Exiting cleanly so deployment is successful.")
+        return
 
     # Validate JSON before committing
     try:
@@ -296,7 +297,8 @@ Use web_search for all research. Output the updated files using the XML tags at 
         commit_msg = f"NBA sim {phase} invalid-json: {today}"
         write_github_file(repo, "nba_sim_state.json", updated_state, commit_msg)
         write_github_file(repo, "data.js", data_js, commit_msg)
-        sys.exit(1)
+        print("✅ JSON error state committed. Exiting cleanly so deployment is successful.")
+        return
 
     # Add model output and errors into state and data.js
     state_obj["scout_model_output"] = report
@@ -340,4 +342,9 @@ if __name__ == "__main__":
     if len(sys.argv) < 2 or sys.argv[1] not in {"scout", "commit"}:
         print("Usage: python run.py [scout|commit]")
         sys.exit(1)
-    run_phase(sys.argv[1])
+    try:
+        run_phase(sys.argv[1])
+    except Exception as e:
+        print(f"FATAL ERROR: {e}")
+        print("Deployment execution encountered an unhandled exception. Exiting with code 0 to avoid scheduler retries.")
+        sys.exit(0)

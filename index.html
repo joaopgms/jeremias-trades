@@ -2051,6 +2051,36 @@
       }).join('');
     }
 
+    function extractErrorMessage(raw) {
+      if (!raw) return '';
+      let str = raw;
+      if (typeof raw !== 'string') {
+        try { str = JSON.stringify(raw); } catch { str = String(raw); }
+      }
+      str = str.trim();
+
+      // Attempt JSON parsing for structured errors
+      try {
+        const parsed = JSON.parse(str);
+        if (parsed?.error?.error?.message) return String(parsed.error.error.message);
+        if (parsed?.error?.message) return String(parsed.error.message);
+        if (parsed?.message) return String(parsed.message);
+      } catch (_) {
+      }
+
+      // Common format from Python debug text
+      const errorCodeMatch = str.match(/error code:\s*\d+\s*-\s*(.*)$/i);
+      if (errorCodeMatch) return errorCodeMatch[1].trim();
+
+      const jsonMessageMatch = str.match(/"message"\s*:\s*"([^"]+)"/i);
+      if (jsonMessageMatch) return jsonMessageMatch[1].trim();
+
+      const colonMsg = str.split(':').slice(1).join(':').trim();
+      if (colonMsg) return colonMsg;
+
+      return str;
+    }
+
     function renderScoutModelCard() {
       const output = typeof SCOUT_MODEL_OUTPUT !== 'undefined' ? SCOUT_MODEL_OUTPUT : '';
       const err = typeof SCOUT_ERROR !== 'undefined' ? SCOUT_ERROR : '';
@@ -2060,26 +2090,27 @@
       const errorEl = document.getElementById('scoutErrorOutput');
       const statusEl = document.getElementById('scoutStatus');
       const statusLineEl = document.getElementById('scoutStatusLine');
-
-      modelEl.textContent = output || 'No scout model output available yet.';
-      const humanDate = updatedAt ? new Date(updatedAt).toLocaleString() : 'unknown';
-
       const dot = document.getElementById('scoutStatusDot');
       const textEl = document.getElementById('scoutStatusText');
+
+      modelEl.textContent = output || 'No scout model output available yet.';
+      const humanDate = updatedAt ? new Date(updatedAt).toLocaleString('pt-PT') : 'unknown';
+
       if (status.toLowerCase() === 'live') {
         statusEl.className = 'scout-status-pill online';
         dot.className = 'scout-dot online';
         textEl.textContent = 'Online';
-        statusLineEl.textContent = `Last run: ${humanDate} · Agent is online.`;
+        statusLineEl.textContent = `From the last run (scout/commit) · Last run: ${humanDate} · Agent online.`;
         errorEl.style.display = 'none';
       } else {
         statusEl.className = 'scout-status-pill offline';
         dot.className = 'scout-dot offline';
         textEl.textContent = 'Offline';
-        statusLineEl.textContent = `Last run: ${humanDate} · Agent offline.`;
-        if (err) {
+        statusLineEl.textContent = `From the last run (scout/commit) · Last run: ${humanDate} · Agent offline.`;
+        const cleanErr = extractErrorMessage(err);
+        if (cleanErr) {
           errorEl.style.display = 'block';
-          errorEl.textContent = '⚠️ ' + err;
+          errorEl.textContent = `Error: ${cleanErr}`;
         } else {
           errorEl.style.display = 'none';
         }
