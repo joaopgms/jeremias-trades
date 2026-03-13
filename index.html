@@ -2093,8 +2093,12 @@
       const dot = document.getElementById('scoutStatusDot');
       const textEl = document.getElementById('scoutStatusText');
 
-      modelEl.textContent = output || 'No scout model output available yet.';
       const humanDate = updatedAt ? new Date(updatedAt).toLocaleString('pt-PT') : 'unknown';
+      const cleanErr = extractErrorMessage(err);
+      const modelOutput = status.toLowerCase() === 'live'
+        ? (output || 'No scout model output available yet.')
+        : 'Scout run failed. See error below.';
+      modelEl.textContent = modelOutput;
 
       if (status.toLowerCase() === 'live') {
         statusEl.className = 'scout-status-pill online';
@@ -2107,7 +2111,6 @@
         dot.className = 'scout-dot offline';
         textEl.textContent = 'Offline';
         statusLineEl.textContent = `From the last run (scout/commit) · Last run: ${humanDate} · Agent offline.`;
-        const cleanErr = extractErrorMessage(err);
         if (cleanErr) {
           errorEl.style.display = 'block';
           errorEl.textContent = `Error: ${cleanErr}`;

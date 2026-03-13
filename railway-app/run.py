@@ -248,7 +248,7 @@ Use web_search for all research. Output the updated files using the XML tags at 
         print(final_text[:3000])
 
         state_obj = json.loads(state_json)
-        state_obj["scout_model_output"] = final_text[:10000]
+        state_obj["scout_model_output"] = "Scout output unavailable due model error."
         state_obj["scout_error"] = "Missing <updated_state> or <updated_history> tags in Claude output."
         state_obj["scout_status"] = "unavailable"
         state_obj["scout_updated_at"] = datetime.now(timezone.utc).isoformat()
@@ -279,7 +279,7 @@ Use web_search for all research. Output the updated files using the XML tags at 
     except json.JSONDecodeError as e:
         print(f"ERROR: Invalid JSON in Claude's output: {e}")
         state_obj = json.loads(state_json)
-        state_obj["scout_model_output"] = final_text[:10000]
+        state_obj["scout_model_output"] = "Scout output unavailable due invalid JSON from model."
         state_obj["scout_error"] = f"Invalid JSON in Claude output: {e}"
         state_obj["scout_status"] = "unavailable"
         state_obj["scout_updated_at"] = datetime.now(timezone.utc).isoformat()
