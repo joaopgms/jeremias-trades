@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
 NBA Betting Sim — Railway runner
-Handles both scout (14:00 PT) and commit (22:30 PT) phases autonomously.
+Handles scout (14:00 PT) and commit phases, including dynamic commit trigger.
 
 Usage:
     python run.py scout
     python run.py commit
+    python run.py commit_if_ready
 """
 
 import sys
@@ -20,6 +21,8 @@ import anthropic
 from duckduckgo_search import DDGS
 import github
 from github import GithubException
+import requests
+from datetime import timedelta
 
 
 def _load_env_file(path: str) -> None:
@@ -92,6 +95,69 @@ def web_search(query: str) -> str:
         )
     except Exception as e:
         return f"Search error for '{query}': {e}"
+
+
+def get_first_nba_game_start_utc() -> datetime | None:
+    """Fetch today's first NBA game start in UTC using ESPN scoreboards."""
+    today = datetime.now(timezone.utc).strftime("%Y%m%d")
+    url = f"https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard?dates={today}"
+    try:
+        res = requests.get(url, timeout=12)
+        res.raise_for_status()
+        data = res.json()
+        events = data.get("events", [])
+        starts = []
+        for ev in events:
+            start = ev.get("date")
+            if not start:
+                continue
+            try:
+                dt = datetime.fromisoformat(start.replace("Z", "+00:00"))
+                starts.append(dt)
+            except Exception:
+                continue
+        if not starts:
+            return None
+        return min(starts)
+    except Exception as e:
+        print(f"Could not fetch NBA schedule: {e}")
+        return None
+
+
+def run_commit_if_ready() -> None:
+    repo = get_repo()
+    state_json = read_github_file(repo, "nba_sim_state.json")
+    first_game_time = None
+    if state_json:
+        try:
+            state_obj = json.loads(state_json)
+            first_game_time = state_obj.get("first_game_time")
+        except Exception:
+            first_game_time = None
+
+    if first_game_time:
+        try:
+            first_game = datetime.fromisoformat(first_game_time.replace("Z", "+00:00"))
+        except Exception:
+            first_game = None
+    else:
+        first_game = get_first_nba_game_start_utc()
+
+    if not first_game:
+        print("No NBA game schedule found for today. Skipping dynamic commit run.")
+        return
+
+    commit_trigger = first_game - timedelta(minutes=15)
+    now = datetime.now(timezone.utc)
+    print(f"First NBA game (UTC): {first_game.isoformat()}")
+    print(f"Dynamic commit trigger (UTC): {commit_trigger.isoformat()}")
+
+    if now < commit_trigger:
+        print("Not yet time for dynamic commit. Wait until 15 minutes before first game.")
+        return
+
+    print("Dynamic commit window reached — running commit phase now.")
+    run_phase("commit")
 
 
 # ── GitHub Helpers ────────────────────────────────────────────────────────────
@@ -270,6 +336,7 @@ Use web_search for all research. Output the updated files using the XML tags at 
     # Parse Claude's output
     updated_state   = extract_tag(final_text, "updated_state")
     updated_history = extract_tag(final_text, "updated_history")
+    first_game_time = extract_tag(final_text, "first_game_time")
     report          = extract_tag(final_text, "report") or "No report generated."
 
     # If Claude did not return state/history tags, capture error and commit existing state for visibility.
@@ -283,6 +350,8 @@ Use web_search for all research. Output the updated files using the XML tags at 
         state_obj["scout_error"] = sanitize_error_text("Missing <updated_state> or <updated_history> tags in Claude output.")
         state_obj["scout_status"] = "unavailable"
         state_obj["scout_updated_at"] = datetime.now(timezone.utc).isoformat()
+        if first_game_time:
+            state_obj["first_game_time"] = first_game_time
         state_obj["last_report"] = report
 
         draft_picks = state_obj.get("draft_picks", [])
@@ -334,13 +403,10 @@ Use web_search for all research. Output the updated files using the XML tags at 
     # Add model output and errors into state and data.js
     state_obj["scout_model_output"] = report
     state_obj["scout_error"] = ""
-    state_obj["last_report"] = report
-    updated_state = json.dumps(state_obj, indent=2)
-
-    state_obj["scout_model_output"] = report
-    state_obj["scout_error"] = ""
     state_obj["scout_status"] = "live"
     state_obj["scout_updated_at"] = datetime.now(timezone.utc).isoformat()
+    if first_game_time:
+        state_obj["first_game_time"] = first_game_time
     state_obj["last_report"] = report
     updated_state = json.dumps(state_obj, indent=2)
 
@@ -370,11 +436,15 @@ Use web_search for all research. Output the updated files using the XML tags at 
 # ── Entry Point ───────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2 or sys.argv[1] not in {"scout", "commit"}:
-        print("Usage: python run.py [scout|commit]")
+    mode = sys.argv[1] if len(sys.argv) > 1 else None
+    if mode not in {"scout", "commit", "commit_if_ready"}:
+        print("Usage: python run.py [scout|commit|commit_if_ready]")
         sys.exit(1)
     try:
-        run_phase(sys.argv[1])
+        if mode == "commit_if_ready":
+            run_commit_if_ready()
+        else:
+            run_phase(mode)
     except Exception as e:
         print(f"FATAL ERROR: {e}")
         print("Deployment execution encountered an unhandled exception. Exiting with code 0 to avoid scheduler retries.")

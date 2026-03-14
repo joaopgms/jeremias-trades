@@ -16,6 +16,10 @@ At the very end of your response, output ALL THREE blocks below. JSON must be co
 {complete updated nba_sim_history.json as valid JSON}
 </updated_history>
 
+<first_game_time>
+{ISO 8601 UTC timestamp of first NBA game start for today (e.g. 2026-03-14T17:00:00Z)}
+</first_game_time>
+
 <report>
 {the full scout report text}
 </report>
